@@ -150,7 +150,7 @@ h2{font-size:18px;margin:4px 0 10px}h3{font-size:15px;margin:16px 0 8px}.mu{colo
  <div class="pn" id="pS" hidden><h2 id="ft">Add student</h2>
   <div class="form"><input id="fr" placeholder="Roll no. (24-ETC-01)"><input id="fn" placeholder="Student name"><input id="ff" placeholder="Father's name"><input id="fp" type="tel" placeholder="Phone 03001234567"></div>
   <div class="rm"><button class="btn" id="fs">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="fmsg" style="color:var(--red)"></span></div>
-  <p class="mu" style="font-size:12px;margin:10px 0 0">Changes apply from the next attendance day. Past days keep the details they had.</p></div>
+  <p class="mu" style="font-size:12px;margin:10px 0 0">A new student is counted absent for all earlier class days (monthly counts and the profile). Past day records are not rewritten. Students are kept in roll-number order.</p></div>
 </div>
 <div id="toast"></div>
 
@@ -235,7 +235,7 @@ function drawLeaves(r){
 const SEL={ls:"",as:""},PK={};
 function picker(inp,lst,key){const i=$(inp),l=$(lst);
  const render=()=>{const q=i.value.trim().toLowerCase();l.innerHTML="";
-  ALL.filter(x=>!q||(x.name+" "+x.roll).toLowerCase().includes(q)).sort((a,b)=>a.roll.localeCompare(b.roll)).forEach(x=>{
+  ALL.filter(x=>!q||(x.name+" "+x.roll).toLowerCase().includes(q)).sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true})).forEach(x=>{
    const b=mk("button",{type:"button",textContent:x.roll.split("-").pop()+" · "+x.name,className:SEL[key]===x.roll?"on":""});
    b.onclick=()=>{SEL[key]=x.roll;i.value=x.name+" ("+x.roll+")";render()};l.appendChild(b)});
   if(!l.children.length)l.appendChild(mk("div",{className:"mu",textContent:"No student found",style:"padding:10px 12px"}))};
@@ -293,7 +293,7 @@ async function month(){$("mlist").innerHTML="";$("mnote").textContent="Loading..
 
 /* ---------- students + profile ---------- */
 function drawSt(){const q=$("sq").value.trim().toLowerCase(),b=$("slist");b.innerHTML="";
- ST.slice().sort((a,b)=>a.roll.localeCompare(b.roll)).filter(s=>!q||(s.name+" "+s.roll).toLowerCase().includes(q)).forEach(s=>{
+ ST.slice().sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true})).filter(s=>!q||(s.name+" "+s.roll).toLowerCase().includes(q)).forEach(s=>{
   const pr=mk("button",{className:"btn sm",textContent:"Profile"}),e=mk("button",{className:"btn alt sm",textContent:"Edit"}),d=mk("button",{className:"btn dng sm",textContent:"Remove"});
   pr.onclick=()=>openProfile(s.roll);e.onclick=()=>openForm(s);
   d.onclick=async()=>{if(!confirm("Remove "+s.name+" from the class list? Past records are kept."))return;d.disabled=true;
