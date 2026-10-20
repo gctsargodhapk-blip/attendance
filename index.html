@@ -148,9 +148,9 @@ h2{font-size:18px;margin:4px 0 10px}h3{font-size:15px;margin:16px 0 8px}.mu{colo
    <input class="full" id="ar" type="text" placeholder="Reason (e.g. sports camp, medical)"></div>
   <div class="rm"><button class="btn" id="asv">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="am" style="color:var(--red)"></span></div></div>
  <div class="pn" id="pS" hidden><h2 id="ft">Add student</h2>
-  <div class="form"><input id="fr" placeholder="Roll no. (24-ETC-01)"><input id="fn" placeholder="Student name"><input id="ff" placeholder="Father's name"><input id="fp" type="tel" placeholder="Phone 03001234567"></div>
+  <div class="form"><input id="fr" placeholder="Roll no. (24-ETC-01)"><input id="fn" placeholder="Student name"><input id="ff" placeholder="Father's name"><input id="fp" type="tel" placeholder="Phone 03001234567"><div class="full"><small>Joined on (class days before this date count as absent)</small><input id="fj" type="date"></div></div>
   <div class="rm"><button class="btn" id="fs">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="fmsg" style="color:var(--red)"></span></div>
-  <p class="mu" style="font-size:12px;margin:10px 0 0">A new student is counted absent for all earlier class days (monthly counts and the profile). Past day records are not rewritten. Students are kept in roll-number order.</p></div>
+  <p class="mu" style="font-size:12px;margin:10px 0 0">Class days before the joined date count as absent (monthly counts and the profile). Past day records are not rewritten. Students are kept in roll-number order.</p></div>
 </div>
 <div id="toast"></div>
 
@@ -298,12 +298,12 @@ function drawSt(){const q=$("sq").value.trim().toLowerCase(),b=$("slist");b.inne
   pr.onclick=()=>openProfile(s.roll);e.onclick=()=>openForm(s);
   d.onclick=async()=>{if(!confirm("Remove "+s.name+" from the class list? Past records are kept."))return;d.disabled=true;
    try{ST=await call("tDeleteStudent",s.roll);drawSt();toast("Removed")}catch(x){toast(x.message||"Error");d.disabled=false}};
-  b.appendChild(mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:s.name}),mk("small",{textContent:s.roll+" · S/O "+s.father+" · "+s.phone})]),pr,e,d]))});
+  b.appendChild(mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:s.name}),mk("small",{textContent:s.roll+" · S/O "+s.father+" · "+s.phone+(s.joined?" · joined "+s.joined:"")})]),pr,e,d]))});
  if(!b.children.length)b.appendChild(mk("div",{className:"empty",textContent:"No students found."}))}
 async function loadSt(){try{ST=await call("tStudents");drawSt()}catch(e){$("slist").textContent=e.message||"Could not load"}}
-function openForm(s){edit=s?s.roll:"";$("ft").textContent=s?"Edit student":"Add student";$("fr").value=s?s.roll:"";$("fn").value=s?s.name:"";$("ff").value=s?s.father:"";$("fp").value=s?s.phone:"";$("fmsg").textContent="";openSheet("pS");$("fr").focus()}
+function openForm(s){edit=s?s.roll:"";$("ft").textContent=s?"Edit student":"Add student";$("fr").value=s?s.roll:"";$("fn").value=s?s.name:"";$("ff").value=s?s.father:"";$("fp").value=s?s.phone:"";$("fj").value=s?(s.joined||""):iso;$("fmsg").textContent="";openSheet("pS");$("fr").focus()}
 $("add").onclick=()=>openForm(null);$("sq").oninput=drawSt;
-$("fs").onclick=async()=>{$("fmsg").textContent="Saving...";try{ST=await call("tSaveStudent",edit,{roll:$("fr").value,name:$("fn").value,father:$("ff").value,phone:$("fp").value});closeSheet();drawSt();toast("Saved")}catch(e){$("fmsg").textContent=e.message||"Error"}};
+$("fs").onclick=async()=>{$("fmsg").textContent="Saving...";try{ST=await call("tSaveStudent",edit,{roll:$("fr").value,name:$("fn").value,father:$("ff").value,phone:$("fp").value,joined:$("fj").value});closeSheet();drawSt();toast("Saved")}catch(e){$("fmsg").textContent=e.message||"Error"}};
 async function openProfile(roll){show(6);const b=$("pbody");b.innerHTML="";b.appendChild(mk("div",{className:"empty",textContent:"Loading..."}));
  try{const p=await call("tProfile",roll);b.innerHTML="";drawProfile(p)}catch(e){b.innerHTML="";b.appendChild(mk("div",{className:"empty",textContent:e.message||"Could not load"}))}}
 function drawProfile(p){const b=$("pbody"),s=p.student,ml=m=>new Date(m+"-15T12:00:00").toLocaleDateString("en-GB",{month:"short",year:"numeric"});
