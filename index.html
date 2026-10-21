@@ -1,345 +1,117 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Attendance</title>
+<title>CR Attendance</title>
 <meta name="theme-color" content="#0b5d4b"><link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Attendance">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="CR Attendance">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#101828;--mu:#667085;--pine:#0b5d4b;--bg:#eef3f1;--card:#fff;--ln:#d7e0dc;--red:#b42318;--redbg:#fdecea;--amb:#b7791f;--ambbg:#fdf3dc;--grn:#137333}
+:root{--ink:#101828;--mu:#667085;--pine:#0b5d4b;--pine2:#0e7a63;--bg:#eef3f1;--card:#fff;--ln:#d7e0dc;--red:#b42318;--redbg:#fdecea}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 Manrope,system-ui,sans-serif}
-#ld{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pine),#9fd8c8);transform-origin:left;opacity:0;z-index:50}
-#ld.on{opacity:1;animation:ld 1.2s ease-in-out infinite}@keyframes ld{0%{transform:scaleX(0)}70%{transform:scaleX(.85)}100%{transform:scaleX(1);opacity:.3}}
-.top{background:var(--pine);color:#fff;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 14px;display:flex;gap:12px;align-items:center}
+.top{background:var(--pine);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center}
 .mono{width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;padding:5px}.mono img{width:100%;height:100%;object-fit:contain}
-.top h1{font-size:18px;margin:0;font-weight:800}#cls{background:transparent;color:#fff;border:0;padding:0;font:inherit;font-size:13px;width:auto;max-width:70vw;opacity:.9}#cls option{color:#101828}
-.wrap{max-width:760px;margin:0 auto;padding:14px 14px 96px}
-input,select,button{font:inherit;color:var(--ink)}
-input,select{padding:10px 12px;border:1px solid var(--ln);border-radius:10px;background:#fff;min-width:0;width:100%}
-input:focus,button:focus-visible,select:focus{outline:3px solid #9fd8c8;outline-offset:1px}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.bar>*{flex:1;min-width:130px}
-.btn{font-weight:800;background:var(--pine);color:#fff;border:0;border-radius:10px;padding:11px 16px;cursor:pointer;text-decoration:none;display:inline-flex;gap:8px;align-items:center;justify-content:center;width:auto}
-.btn.alt{background:#fff;color:var(--pine);border:1px solid var(--pine)}.btn.sm{padding:8px 12px;font-size:13px}.btn.dng{background:#fff;color:var(--red);border:1px solid var(--red)}.btn:disabled{opacity:.5}
-.btn.call{padding:12px 22px;font-size:16px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.stat{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:10px 12px}.stat b{font-size:24px;line-height:1;display:block}.stat span{font-size:11px;color:var(--mu);font-weight:700}
-.card{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
-.card.al{background:var(--ambbg);border-color:#ecd49a}.al b.t{display:block;margin-bottom:6px}.al div.it{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font-weight:700}
-.hd{display:flex;gap:10px;align-items:flex-start}.hd .nm{font-weight:800;font-size:16px}.hd small{display:block;color:var(--mu)}
-.bd{margin-left:auto;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
-.badge{font-weight:800;font-size:12px;padding:5px 9px;border-radius:99px;background:#eef3f1;color:var(--mu);white-space:nowrap}
-.badge.w{background:var(--ambbg);color:var(--amb)}.badge.h{background:var(--redbg);color:var(--red)}
-.ph{display:flex;align-items:center;gap:8px;margin:10px 0;flex-wrap:wrap}.ph span{color:var(--mu);font-weight:700}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chips button{border:1px solid var(--ln);background:#fff;border-radius:99px;padding:8px 13px;font-weight:700;font-size:13px;cursor:pointer}
-.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.chips button.on.g{background:var(--grn);border-color:var(--grn)}
-.rm{display:flex;gap:8px;align-items:center}.rm input{flex:1}.sv{font-size:12px;font-weight:700;color:var(--grn);min-width:54px}
-.mrow{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;gap:12px;align-items:center}
-.mrow .tx{flex:1;min-width:0}.mrow b{display:block}.mrow small{color:var(--mu)}
-.trk{height:6px;background:#e6ece9;border-radius:9px;margin-top:6px;overflow:hidden}.trk i{display:block;height:100%;background:var(--pine);border-radius:9px}
-.trk i.w{background:var(--amb)}.trk i.h{background:var(--red)}.mrow .c{font-size:22px;font-weight:800;min-width:34px;text-align:right}.mrow .c small{display:block;font-size:11px;color:var(--amb);white-space:nowrap}
-.dl{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.lab{font-weight:800;font-size:12px;padding:4px 9px;border-radius:99px}.lab.r{background:var(--redbg);color:var(--red)}.lab.a{background:var(--ambbg);color:var(--amb)}.lab.b{background:#e8f0fb;color:#2563a8}
-.pill{background:#f1f5f3;border:1px solid var(--ln);border-radius:99px;padding:3px 10px;font-size:13px}
-.nmlink{cursor:pointer;text-decoration:underline;text-decoration-color:var(--ln);text-underline-offset:3px}
-.empty{text-align:center;color:var(--mu);padding:26px 10px;font-weight:700}
-.sr{flex-wrap:wrap;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px}.sr .tx{flex:1;min-width:140px}.sr small{display:block;color:var(--mu)}
-.pl{max-height:170px;overflow:auto;border:1px solid var(--ln);border-radius:10px;margin-top:6px;background:#fff}.pl button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--ln);background:#fff;padding:10px 12px;font:inherit;cursor:pointer}.pl button:last-child{border-bottom:0}.pl button.on{background:#e3f0ec;font-weight:800}
-.seg{display:flex;gap:8px;margin-bottom:12px}.seg button{flex:1;font-weight:800;border:1px solid var(--ln);background:#fff;padding:9px;border-radius:99px;cursor:pointer}.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.mi{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer}
-.mi b{display:block}.mi small{color:var(--mu)}.mi .ch{margin-left:auto;color:var(--mu);font-size:22px}
-.form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.form .full{grid-column:1/-1}.form small{color:var(--mu);font-weight:700}
-#ov{position:fixed;inset:0;background:rgba(16,24,40,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
-.pn{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:90vh;overflow:auto}
-.pn h2{margin:0 0 2px}.pn .mu{margin:0}
-#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-weight:700;font-size:14px;display:none;z-index:60;max-width:90%;text-align:center}
-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--ln);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;border:0;background:none;padding:12px 4px;font-weight:800;color:var(--mu);cursor:pointer;border-top:3px solid transparent}
-nav button.on{color:var(--pine);border-top-color:var(--pine)}
-h2{font-size:18px;margin:4px 0 10px}h3{font-size:15px;margin:16px 0 8px}.mu{color:var(--mu)}[hidden]{display:none!important}
+.top h1{font-size:18px;margin:0;font-weight:800}.top p{margin:0;font-size:13px;opacity:.85}
+.wrap{max-width:640px;margin:0 auto;padding:14px 14px 110px}
+.panel{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:18px;margin-top:16px}
+.panel h2{margin:0 0 4px;font-size:20px}.panel p{margin:0 0 14px;color:var(--mu)}
+label{display:block;font-weight:700;font-size:13px;margin:12px 0 5px}
+input{font:inherit;width:100%;padding:12px;border:1px solid var(--ln);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,button:focus-visible{outline:3px solid #9fd8c8;outline-offset:1px}
+.btn{font:inherit;font-weight:800;background:var(--pine);color:#fff;border:0;border-radius:12px;padding:13px 20px;cursor:pointer}
+.btn:disabled{opacity:.5}.btn.full{width:100%;margin-top:18px}
+.tools{position:sticky;top:0;background:var(--bg);padding:12px 0 8px;z-index:3}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;color:var(--mu);font-size:13px;font-weight:700}
+.seg{display:flex;gap:8px;margin-top:8px}.seg button{font:inherit;font-weight:700;border:1px solid var(--ln);background:#fff;color:var(--ink);padding:7px 14px;border-radius:99px}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:11px 12px;margin-bottom:8px;color:var(--ink);cursor:pointer}
+.row .no{width:42px;font-weight:800;font-size:20px;color:var(--pine);letter-spacing:-.5px}
+.row .nm{font-weight:700}.row small{display:block;color:var(--mu);font-weight:500}
+.row .mk{margin-left:auto;width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);display:grid;place-items:center;font-weight:800;color:transparent}
+.row.lv{background:#fdf3dc;border-color:#ecd49a;cursor:default}.row.lv .no{color:#b7791f}.row.lv .mk{background:#b7791f;border-color:#b7791f;color:#fff}
+.row.hf{background:#e8f0fb;border-color:#b9cdee}.row.hf .no{color:#2563a8}.row.hf .mk{background:#2563a8;border-color:#2563a8;color:#fff}
+.sec{font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mu);margin:14px 2px 8px}.sec.lv{color:#b7791f}
+.row.ab{background:var(--redbg);border-color:#f1b5ae}.row.ab .no{color:var(--red)}.row.ab .mk{background:var(--red);border-color:var(--red);color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--ln);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.cnt{font-size:30px;font-weight:800;line-height:1;color:var(--red)}.cnt small{display:block;font-size:12px;color:var(--mu);font-weight:700;margin-top:3px}
+.bar .btn{margin-left:auto;padding:14px 22px}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-weight:700;font-size:14px;display:none;max-width:90%;text-align:center}
+.err{color:var(--red);font-weight:700;margin-top:10px;min-height:20px}
+[hidden]{display:none!important}
+.rst{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:8px;padding:6px 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.top{padding-top:calc(14px + env(safe-area-inset-top,0px))}
 </style></head><body>
-<div id="ld"></div>
-<div class="top"><div class="mono"><img src="logo.png" alt="TEVTA logo"></div><div><h1>Incharge</h1><select id="cls" aria-label="Class"></select></div></div>
+<div class="top"><div class="mono"><img src="../logo.png" alt="TEVTA logo"></div><div><h1>Attendance</h1><p id="cname">Class representative</p></div><button class="rst" id="rst" hidden>Reset</button></div>
 <div class="wrap">
-<div class="bar" id="dbar"><input id="dt" type="date" aria-label="Date"><select id="hist" aria-label="Past records"><option value="">Past records</option></select><button class="btn alt" id="go">Refresh</button></div>
-
-<section id="v0" hidden>
- <h2>Connect a class</h2>
- <div class="card"><p class="mu" style="margin:0;font-size:13px">Enter the details once. They are saved only on this phone. Find both in the class's Google Sheet, on the <b>Settings</b> tab (link in B3, key in B2). If you opened the install link from Settings!B7, this is filled in for you.</p>
-  <div class="form"><input class="full" id="sn" placeholder="Class name (e.g. Third Year C)"><input class="full" id="su" placeholder="Web app link (ends in /exec)"><input class="full" id="sk" placeholder="Teacher key"></div>
-  <div class="rm"><button class="btn" id="ssv">Connect</button><button class="btn alt" id="scn">Cancel</button><span class="sv" id="smsg" style="color:var(--red)"></span></div></div>
-</section>
-<section id="v1">
- <div id="ncb"></div>
- <div class="stats"><div class="stat"><b id="sA">-</b><span>Absent</span></div><div class="stat"><b id="sL">-</b><span>On leave</span></div><div class="stat"><b id="sC">-</b><span>Called</span></div><div class="stat"><b id="sP">-</b><span>To call</span></div></div>
- <div id="lnk"></div><div id="alerts"></div><div id="list"></div>
- <div class="bar" style="margin-top:6px"><button class="btn" id="pdf" disabled>Day report PDF</button></div>
-</section>
-
-<section id="v2" hidden>
- <h2>Leaves</h2>
- <div class="bar"><button class="btn" id="bl">+ Leave / half leave</button><button class="btn alt" id="ba">+ Advance leave</button></div>
- <div class="empty" id="lempty" hidden>No leaves recorded for this date.</div>
- <h3 id="lh" hidden>On leave</h3><div id="leaves"></div>
- <h3 id="hh" hidden>Half leave</h3><div id="halfs"></div>
- <h3 id="rh" hidden>Removed by you</h3><div id="removed"></div>
- <h3 id="uh" hidden>Upcoming leaves</h3><div id="upc"></div>
-</section>
-
-<section id="v3" hidden>
- <h2>Records</h2>
- <div class="seg"><button id="sD" class="on">Daily</button><button id="sM">Monthly</button></div>
- <div id="rd"><div class="bar"><input id="dmo" type="month" aria-label="Month"></div><p class="mu" id="dnote"></p><div id="dlist"></div></div>
- <div id="rm" hidden><div class="bar"><input id="mo" type="month" aria-label="Month"><button class="btn" id="mpdf">Month report PDF</button></div><p class="mu" id="mnote"></p><div id="mlist"></div></div>
-</section>
-
-<section id="v4" hidden>
- <h2>More</h2>
- <button class="mi" id="m5"><div><b>Students</b><small>Add, edit or remove students, open profiles</small></div><span class="ch">›</span></button>
- <button class="mi" id="m7"><div><b>No-class days</b><small>Holidays and cancelled classes</small></div><span class="ch">›</span></button>
- <button class="mi" id="m9"><div><b>Classes on this device</b><small>Switch, add or remove classes</small></div><span class="ch">›</span></button>
- <button class="mi" id="m8"><div><b>CR PIN and alerts</b><small>Change the PIN the CR uses</small></div><span class="ch">›</span></button>
-</section>
-
-<section id="v5" hidden>
- <div class="bar"><button class="btn alt" id="bk5">Back</button></div>
- <h2>Students</h2>
- <div class="bar"><input id="sq" type="search" placeholder="Search students"><button class="btn" id="add">Add student</button></div>
- <div id="slist"></div>
-</section>
-
-<section id="v6" hidden>
- <div class="bar"><button class="btn alt" id="pback">Back</button></div><div id="pbody"></div>
-</section>
-
-<section id="v7" hidden>
- <div class="bar"><button class="btn alt" id="bk7">Back</button></div>
- <h2>No-class days</h2>
- <div class="card"><p class="mu" style="margin:0;font-size:13px">The CR cannot submit attendance on these dates, and they are not counted in reports.</p>
-  <div class="form"><div><small>From</small><input id="nf" type="date"></div><div><small>To</small><input id="nt" type="date"></div>
-   <input class="full" id="nr" type="text" placeholder="Reason (e.g. Eid holiday)"></div>
-  <div class="rm"><button class="btn sm" id="nb">Mark no-class</button><span class="sv" id="nm" style="color:var(--red)"></span></div></div>
- <h3>Marked days</h3><div id="nlist"></div>
-</section>
-
-<section id="v9" hidden>
- <div class="bar"><button class="btn alt" id="bk9">Back</button></div>
- <h2>Classes on this device</h2><div id="clist"></div>
- <div class="bar"><button class="btn" id="addc">Add class</button></div>
-</section>
-
-<section id="v8" hidden>
- <div class="bar"><button class="btn alt" id="bk8">Back</button></div>
- <h2>CR PIN and alerts</h2>
- <div class="card"><b>Class PIN for the CR</b><p class="mu" id="cur" style="margin:4px 0 10px"></p>
-  <div class="rm"><input id="np" type="text" placeholder="New PIN (4-12 characters)"><button class="btn" id="setpin">Change PIN</button></div><p class="sv" id="pm"></p></div>
- <div class="card"><b>Alerts</b><p class="mu" style="margin:4px 0 0">Month badge: amber from 3 absences, red from 5. "Needs attention" appears when a student is absent 3 recorded class days in a row. A leave, half leave or present day resets the count. Half leaves are not counted as absences and are not printed in the PDF reports.</p></div>
-</section>
+ <div id="login" class="panel"><h2>Connect your class</h2><p>Enter these once. They are saved only on this phone.</p>
+  <label for="su">Web app link</label><input id="su" type="url" placeholder="https://script.google.com/.../exec" autocomplete="off">
+  <label for="sn">Class name</label><input id="sn" placeholder="e.g. Third Year C" autocomplete="off">
+  <label for="pin">Class PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="off">
+  <button class="btn full" id="go">Connect</button><div class="err" id="err"></div></div>
+ <div id="main" hidden>
+  <div class="tools"><div class="meta"><span id="dlabel"></span><span id="state"></span></div>
+   <input id="dt" type="date" style="margin-bottom:8px" aria-label="Date">
+   <input id="q" type="search" placeholder="Search by name or roll number">
+   <div class="seg"><button id="fAll" class="on">All students</button><button id="fAb">Marked only</button></div><p style="margin:8px 0 0;font-size:12px;color:var(--mu)">Tap once = Absent &middot; twice = Half leave &middot; three times = clear &middot; amber L = approved leave (locked)</p></div>
+  <div id="list"></div></div>
 </div>
-
-<nav><button id="n1" class="on">Calls</button><button id="n2">Leaves</button><button id="n3">Records</button><button id="n4">More</button></nav>
-
-<div id="ov" hidden>
- <div class="pn" id="pL" hidden><h2>Record a leave</h2><p class="mu" id="pLd"></p>
-  <div class="form"><select id="lt" class="full"><option value="full">Full leave</option><option value="half">Half leave</option></select>
-   <div class="full"><input id="qL" type="search" placeholder="Search student by name or roll no." autocomplete="off"><div class="pl" id="plL"></div></div><input class="full" id="lr" type="text" placeholder="Reason (e.g. sick, family event)"></div>
-  <div class="rm"><button class="btn" id="lsv">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="lm" style="color:var(--red)"></span></div></div>
- <div class="pn" id="pA" hidden><h2>Leave in advance</h2><p class="mu" style="font-size:13px">Applies to every class day in the range. The CR sees these students as locked on leave.</p>
-  <div class="form"><div class="full"><input id="qA" type="search" placeholder="Search student by name or roll no." autocomplete="off"><div class="pl" id="plA"></div></div><div><small>From</small><input id="af" type="date"></div><div><small>To</small><input id="at" type="date"></div>
-   <input class="full" id="ar" type="text" placeholder="Reason (e.g. sports camp, medical)"></div>
-  <div class="rm"><button class="btn" id="asv">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="am" style="color:var(--red)"></span></div></div>
- <div class="pn" id="pS" hidden><h2 id="ft">Add student</h2>
-  <div class="form"><input id="fr" placeholder="Roll no. (24-ETC-01)"><input id="fn" placeholder="Student name"><input id="ff" placeholder="Father's name"><input id="fp" type="tel" placeholder="Phone 03001234567"><div class="full"><small>Joined on (class days before this date count as absent)</small><input id="fj" type="date"></div></div>
-  <div class="rm"><button class="btn" id="fs">Save</button><button class="btn alt" data-x="1">Cancel</button><span class="sv" id="fmsg" style="color:var(--red)"></span></div>
-  <p class="mu" style="font-size:12px;margin:10px 0 0">Class days before the joined date count as absent (monthly counts and the profile). Past day records are not rewritten. Students are kept in roll-number order.</p></div>
-</div>
+<div class="bar" id="bar" hidden><div class="in"><div class="cnt"><span id="n">0</span><small id="of"></small></div>
+ <button class="btn" id="sub">Submit absentees</button></div></div>
 <div id="toast"></div>
-
 <script>
-let CFG;try{CFG=JSON.parse(localStorage.getItem("gct_cfg")||"")}catch(e){}
-if(!CFG||!Array.isArray(CFG.list))CFG={list:[],cur:0};
-const saveCfg=()=>{try{localStorage.setItem("gct_cfg",JSON.stringify(CFG))}catch(e){}};
-const active=()=>CFG.list[CFG.cur];
-function addClass(n,u,k){u=(u||"").trim();k=(k||"").trim();n=(n||"").trim()||"Class";
- if(!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(u))throw new Error("The web app link must start with https://script.google.com and end with /exec");
- if(!/^[A-Za-z0-9-]{8,64}$/.test(k))throw new Error("The teacher key looks wrong. Copy it from Settings, cell B2.");
- const i=CFG.list.findIndex(x=>x.u===u);if(i>=0)CFG.list[i]={n:n,u:u,k:k};else CFG.list.push({n:n,u:u,k:k});CFG.cur=i>=0?i:CFG.list.length-1;saveCfg()}
-async function api(fn,args){const c=active();if(!c)throw new Error("No class connected");let res;
- try{res=await fetch(c.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:fn,args:[c.k].concat(args)}),redirect:"follow"})}
+const $=i=>document.getElementById(i);let S=[],A=new Set(),Lv=new Set(),H=new Set(),NC='',only=false,dirty=false,lastDate="",CFG=null;
+try{CFG=JSON.parse(localStorage.getItem("gct_cr")||"null")}catch(e){}
+const saveCfg=()=>{try{CFG?localStorage.setItem("gct_cr",JSON.stringify(CFG)):localStorage.removeItem("gct_cr")}catch(e){}};
+async function api(fn,args){let res;
+ try{res=await fetch(CFG.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:fn,args:args}),redirect:"follow"})}
  catch(e){throw new Error("No connection. Check your internet and try again.")}
- let j;try{j=await res.json()}catch(e){throw new Error("Server error. Check the web app link, and that the latest version is deployed for Anyone.")}
+ let j;try{j=await res.json()}catch(e){throw new Error("Server error. Ask your teacher to check the app link.")}
  if(!j.ok)throw new Error(j.error);return j.data}
-const $=i=>document.getElementById(i);let L=[],LV=[],HF=[],RM=[],ALL=[],ST=[],edit="",AT=3,prevTab=1,pend=0,rmode="d";
-function done(){pend=Math.max(0,pend-1);if(!pend)$("ld").classList.remove("on")}
-async function call(fn,...a){pend++;$("ld").classList.add("on");try{return await api(fn,a)}finally{done()}}
-function toast(m){const e=$("toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2400)}
-const t=new Date(),iso=new Date(t-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-["dt","nf","nt"].forEach(i=>$(i).value=iso);$("mo").value=$("dmo").value=iso.slice(0,7);
-const OUT=["Informed","No answer","Wrong number","Switched off"],D=()=>$("dt").value;
-function mk(tag,p,k){const e=document.createElement(tag);Object.assign(e,p||{});(k||[]).forEach(x=>e.appendChild(x));return e}
-const cls=n=>n>=5?"h":n>=3?"w":"";
-const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
-const nextDay=d=>{const x=new Date(d+"T12:00:00");x.setDate(x.getDate()+1);return x.toISOString().slice(0,10)};
-const PHONE='<svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>';
-const callBtn=ph=>{const a=mk("a",{className:"btn call",href:"tel:+92"+ph.slice(1)});a.innerHTML=PHONE+"Call";return a};
+const call=(fn,...a)=>api(fn,a);
+const t=new Date(),today=new Date(t-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);$("dt").value=today;
+function toast(m){const e=$("toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2600)}
+function sec(t,lv){const d=document.createElement("div");d.className="sec"+(lv?" lv":"");d.textContent=t;return d}
+function row(s){const lv=Lv.has(s.roll),b=document.createElement("button"),a=A.has(s.roll),h=H.has(s.roll);b.className="row"+(a?" ab":h?" hf":lv?" lv":"");
+ b.innerHTML='<span class="no"></span><span><span class="nm"></span><small></small></span><span class="mk">A</span>';
+ b.querySelector(".no").textContent=s.roll.split("-").pop();b.querySelector(".nm").textContent=s.name;b.querySelector("small").textContent=s.roll;
+ b.querySelector(".mk").textContent=lv?"L":h?"H":"A";if(h)b.querySelector("small").textContent=s.roll+" · Half leave";
+ if(lv){b.querySelector("small").textContent=s.roll+" · On leave";b.onclick=()=>toast("Approved leave. This cannot be changed.")}
+ else b.onclick=()=>{if(a){A.delete(s.roll);H.add(s.roll)}else if(h){H.delete(s.roll)}else A.add(s.roll);dirty=true;$("state").textContent="Not submitted yet";count();draw()};
+ return b}
+function draw(){const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";
+ if(NC){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2>No class on this date</h2><p></p>";p.querySelector("p").textContent=NC;L.appendChild(p);count();return}
+ const base=S.filter(s=>(!only||A.has(s.roll)||H.has(s.roll))&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)));
+ const ls=(only?[]:S.filter(s=>Lv.has(s.roll)&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)))),rest=base.filter(s=>!Lv.has(s.roll));
+ if(ls.length){L.appendChild(sec("On approved leave ("+ls.length+")",1));ls.forEach(s=>L.appendChild(row(s)))}
+ if(rest.length){if(ls.length)L.appendChild(sec("Class list"));rest.forEach(s=>L.appendChild(row(s)))}
+ if(!L.children.length)L.innerHTML='<div class="panel">No students match.</div>';count()}
+function count(){$("n").textContent=A.size;$("of").textContent="absent of "+S.length+(H.size?" · "+H.size+" half leave":"")}
 
-/* ---------- navigation ---------- */
-const NAV={1:1,2:2,3:3,4:4,5:4,7:4,8:4,9:4};
-function show(n){if(n!==6&&n!==0)prevTab=n;[0,1,2,3,4,5,6,7,8,9].forEach(i=>$("v"+i).hidden=i!==n);document.querySelector("nav").hidden=n===0;
- const nn=NAV[n]||NAV[prevTab];[1,2,3,4].forEach(i=>$("n"+i).classList.toggle("on",i===nn));
- $("dbar").hidden=!(n===1||n===2);if(n===3)setR(rmode);if(n===5)loadSt();if(n===9)drawClasses();window.scrollTo(0,0)}
-[1,2,3,4].forEach(i=>$("n"+i).onclick=()=>show(i));
-$("m5").onclick=()=>show(5);$("m7").onclick=()=>show(7);$("m8").onclick=()=>show(8);$("m9").onclick=()=>show(9);$("bk9").onclick=()=>show(4);
-["bk5","bk7","bk8"].forEach(i=>$(i).onclick=()=>show(4));$("pback").onclick=()=>show(prevTab);
-function openSheet(id){document.querySelectorAll(".pn").forEach(p=>p.hidden=p.id!==id);$("ov").hidden=false}
-function closeSheet(){$("ov").hidden=true}
-$("ov").onclick=e=>{if(e.target===$("ov")||e.target.dataset.x)closeSheet()};
-
-/* ---------- calls ---------- */
-function stats(){const c=L.filter(s=>s.o).length;$("sA").textContent=L.length;$("sL").textContent=LV.length;$("sC").textContent=c;$("sP").textContent=L.length-c}
-function drawCalls(r){const box=$("list");box.innerHTML="";stats();
- const lk=$("lnk");lk.innerHTML="";
- if(LV.length||HF.length){const b=mk("button",{className:"mi",style:"padding:10px 14px"},[mk("div",{},[mk("b",{textContent:LV.length+" on leave · "+HF.length+" half leave"}),mk("small",{textContent:"Tap to manage leaves"})]),mk("span",{className:"ch",textContent:"›"})]);b.onclick=()=>show(2);lk.appendChild(b)}
- const a=$("alerts");a.innerHTML="";
- if(r.alerts.length){const c=mk("div",{className:"card al"},[mk("b",{className:"t",textContent:"Needs attention"})]);
-  r.alerts.forEach(x=>c.appendChild(mk("div",{className:"it"},[mk("span",{textContent:x.name+" · "+x.roll}),mk("span",{textContent:x.s+" days in a row",style:"color:var(--red)"})])));a.appendChild(c)}
- if(!L.length){box.appendChild(mk("div",{className:"empty",textContent:"No absentees recorded for this date."}));return}
- L.forEach(s=>{const sv=mk("span",{className:"sv"}),chips=mk("div",{className:"chips"});
-  const rem=mk("input",{type:"text",placeholder:"Remarks (what the parent said)",value:s.r||""});
-  const save=async()=>{sv.textContent="Saving";try{await call("tSave",D(),s.roll,s.o||"",rem.value);s.r=rem.value;sv.textContent="Saved";stats()}catch(e){sv.textContent=e.message||"Error"}};
-  OUT.forEach(o=>{const b=mk("button",{textContent:o,className:(s.o===o?"on ":"")+(o==="Informed"?"g":"")});
-   b.onclick=()=>{s.o=s.o===o?"":o;[...chips.children].forEach(c=>c.classList.toggle("on",c.textContent===s.o));save()};chips.appendChild(b)});
-  rem.onchange=save;
-  const act=(label,c,fn)=>{const b=mk("button",{className:"btn sm "+c,textContent:label});b.onclick=async()=>{if(fn.ask&&!confirm(fn.ask))return;b.disabled=true;try{await fn();load()}catch(e){toast(e.message||"Error");b.disabled=false}};return b};
-  const f1=()=>call("tSetLeave",D(),s.roll,rem.value,true),f2=()=>call("tSetHalf",D(),s.roll,rem.value,true),f3=()=>call("tSetPresent",D(),s.roll);
-  f3.ask="Remove "+s.name+" from today's absent list? The CR cannot add them back.";
-  const bd=mk("div",{className:"bd"},[mk("span",{className:"badge "+cls(s.m),textContent:s.m+(s.m===1?" absence":" absences")+" this month"})]);
-  if(s.s>=2)bd.appendChild(mk("span",{className:"badge "+(s.s>=AT?"h":"w"),textContent:s.s+" days in a row"}));
-  box.appendChild(mk("div",{className:"card"},[
-   mk("div",{className:"hd"},[mk("div",{},[mk("div",{className:"nm nmlink",textContent:s.name,onclick:()=>openProfile(s.roll)}),mk("small",{textContent:s.roll+" · S/O "+s.father})]),bd]),
-   mk("div",{className:"ph"},[callBtn(s.phone),mk("span",{textContent:s.phone})]),chips,mk("div",{className:"rm"},[rem,sv]),
-   mk("div",{className:"ph",style:"margin-bottom:0"},[act("Mark leave","alt",f1),act("Half leave","alt",f2),act("Not absent","dng",f3)])]))})}
-
-/* ---------- leaves ---------- */
-const rowCard=(x,sub,btn)=>mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:x.name}),mk("small",{textContent:sub})]),btn]);
-function actBtn(label,c,fn,ask){const b=mk("button",{className:"btn sm "+c,textContent:label});
- b.onclick=async()=>{if(ask&&!confirm(ask))return;b.disabled=true;try{await fn();load()}catch(e){toast(e.message||"Error");b.disabled=false}};return b}
-function fill(id,hid,arr,f){const c=$(id);c.innerHTML="";$(hid).hidden=!arr.length;arr.forEach(x=>c.appendChild(f(x)))}
-const rng=x=>x.from===x.to?fmt(x.from):fmt(x.from)+" to "+fmt(x.to);
-function drawLeaves(r){
- $("lempty").hidden=!!(LV.length||HF.length||RM.length);
- fill("leaves","lh",LV,x=>rowCard(x,x.roll+" · "+(x.reason||"Approved leave"),actBtn(x.adv?"Cancel advance leave":"Remove leave","dng",()=>x.adv?call("tCancelLeave",x.adv):call("tSetLeave",D(),x.roll,"",false),x.adv?"Cancel this leave for all its days?":"")));
- fill("halfs","hh",HF,x=>rowCard(x,x.roll+(x.reason?" · "+x.reason:""),actBtn("Remove half leave","dng",()=>call("tSetHalf",D(),x.roll,"",false))));
- fill("removed","rh",RM,x=>rowCard(x,x.roll,actBtn("Restore as absent","alt",()=>call("tRestore",D(),x.roll))));
- fill("upc","uh",r.upcoming,x=>rowCard(x,x.roll+" · "+rng(x)+" · "+x.reason,actBtn("Cancel","dng",()=>call("tCancelLeave",x.id),"Cancel this leave for "+x.name+"?")));
- PK.ls();PK.as()}
-const SEL={ls:"",as:""},PK={};
-function picker(inp,lst,key){const i=$(inp),l=$(lst);
- const render=()=>{const q=i.value.trim().toLowerCase();l.innerHTML="";
-  ALL.filter(x=>!q||(x.name+" "+x.roll).toLowerCase().includes(q)).sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true})).forEach(x=>{
-   const b=mk("button",{type:"button",textContent:x.roll.split("-").pop()+" · "+x.name,className:SEL[key]===x.roll?"on":""});
-   b.onclick=()=>{SEL[key]=x.roll;i.value=x.name+" ("+x.roll+")";render()};l.appendChild(b)});
-  if(!l.children.length)l.appendChild(mk("div",{className:"mu",textContent:"No student found",style:"padding:10px 12px"}))};
- i.oninput=()=>{SEL[key]="";render()};return render}
-PK.ls=picker("qL","plL","ls");PK.as=picker("qA","plA","as");
-$("bl").onclick=()=>{SEL.ls="";$("qL").value="";PK.ls();$("pLd").textContent="For "+fmt(D());$("lm").textContent="";openSheet("pL")};
-$("ba").onclick=()=>{SEL.as="";$("qA").value="";PK.as();$("af").value=$("at").value=D();$("am").textContent="";openSheet("pA")};
-$("lsv").onclick=async()=>{if(!SEL.ls){$("lm").textContent="Choose a student";return}$("lm").textContent="Saving";
- try{await call($("lt").value==="half"?"tSetHalf":"tSetLeave",D(),SEL.ls,$("lr").value,true);$("lr").value="";closeSheet();toast("Saved");load()}catch(e){$("lm").textContent=e.message||"Error"}};
-$("asv").onclick=async()=>{if(!SEL.as){$("am").textContent="Choose a student";return}$("am").textContent="Saving";
- try{await call("tAddLeave",SEL.as,$("af").value,$("at").value,$("ar").value);$("ar").value="";closeSheet();toast("Advance leave saved");load()}catch(e){$("am").textContent=e.message||"Error"}};
-
-/* ---------- no-class ---------- */
-function drawNc(r){const b=$("ncb");b.innerHTML="";
- if(r.noclass)b.appendChild(mk("div",{className:"card al"},[mk("b",{className:"t",textContent:"No class on this date"}),mk("div",{textContent:r.noclass})]));
- const g=[];r.holidays.forEach(h=>{const l=g[g.length-1];if(l&&l.reason===h.reason&&nextDay(l.to)===h.d)l.to=h.d;else g.push({from:h.d,to:h.d,reason:h.reason})});
- const c=$("nlist");c.innerHTML="";if(!g.length)c.appendChild(mk("div",{className:"empty",textContent:"No upcoming no-class days."}));
- g.forEach(x=>c.appendChild(rowCard({name:rng(x)},x.reason,actBtn("Remove","dng",()=>call("tRemoveNoClass",x.from,x.to)))))}
-$("nb").onclick=async()=>{$("nm").textContent="Saving";const go=f=>call("tSetNoClass",$("nf").value,$("nt").value,$("nr").value,f);
- try{try{await go(false)}catch(e){const m=e.message||"",i=m.indexOf("HAS_RECORDS:");if(i<0)throw e;
-   if(!confirm("Attendance is already recorded on: "+m.slice(i+12)+". Marking these as no-class will delete those records. Continue?")){$("nm").textContent="";return}await go(true)}
-  $("nr").value="";$("nm").textContent="";toast("Saved");load()}catch(e){$("nm").textContent=e.message||"Error"}};
-
-/* ---------- load ---------- */
-async function load(){$("sA").textContent="-";
- try{const r=await call("tLoad",D());L=r.list;LV=r.leaves;HF=r.half;RM=r.removed;ALL=r.all;AT=r.alertAt;$("pdf").disabled=false;
-  $("cur").textContent="Current PIN: "+r.crPin;
-  const h=$("hist");h.innerHTML="";h.appendChild(mk("option",{value:"",textContent:"Past records"}));r.dates.forEach(d=>h.appendChild(mk("option",{value:d,textContent:d})));
-  drawNc(r);drawCalls(r);drawLeaves(r)}
- catch(e){$("list").innerHTML="";$("list").appendChild(mk("div",{className:"empty",textContent:e.message||"Could not load"}))}}
-$("go").onclick=load;$("dt").onchange=load;$("hist").onchange=e=>{if(e.target.value){$("dt").value=e.target.value;load()}};
-
-/* ---------- records ---------- */
-function setR(m){rmode=m;$("rd").hidden=m!=="d";$("rm").hidden=m!=="m";$("sD").classList.toggle("on",m==="d");$("sM").classList.toggle("on",m==="m");m==="d"?daily():month()}
-$("sD").onclick=()=>setR("d");$("sM").onclick=()=>setR("m");$("dmo").onchange=daily;$("mo").onchange=month;
-async function daily(){const box=$("dlist");box.innerHTML="";$("dnote").textContent="Loading...";
- try{const r=await call("tDaily",$("dmo").value);
-  $("dnote").textContent=r.days.length?r.days.length+" class days recorded"+(r.noclass.length?" · "+r.noclass.length+" no-class days":"")+".":(r.noclass.length?r.noclass.length+" no-class days.":"No attendance recorded in this month.");
-  const items=r.days.map(x=>Object.assign({k:"d"},x)).concat(r.noclass.map(x=>({k:"n",d:x.d,reason:x.reason}))).sort((a,b)=>b.d.localeCompare(a.d));
-  items.forEach(x=>{
-   if(x.k==="n"){box.appendChild(mk("div",{className:"card",style:"background:#f1f5f3"},[mk("div",{style:"font-weight:800",textContent:fmt(x.d)}),mk("small",{className:"mu",textContent:"No class - "+x.reason})]));return}
-   const row=(label,arr,c,why)=>arr.length?mk("div",{className:"dl"},[mk("span",{className:"lab "+c,textContent:label+" ("+arr.length+")"}),...arr.map(p=>mk("span",{className:"pill",textContent:p.roll.split("-").pop()+" "+p.name+(why&&p.reason?" - "+p.reason:"")}))]):null;
-   const parts=[row("Absent",x.absent,"r"),row("Leave",x.leave,"a",1),row("Half leave",x.half,"b",1)].filter(Boolean);
-   const open=mk("button",{className:"btn alt sm",textContent:"Open day"});open.onclick=()=>{$("dt").value=x.d;show(1);load()};
-   box.appendChild(mk("div",{className:"card"},[mk("div",{className:"hd"},[mk("div",{},[mk("div",{style:"font-weight:800;font-size:16px",textContent:fmt(x.d)}),mk("small",{textContent:x.absent.length+" absent · "+x.leave.length+" leave · "+x.half.length+" half leave"})]),mk("div",{className:"bd"},[open])]),
-    ...(parts.length?parts:[mk("div",{className:"mu",textContent:"No absentees, leaves or half leaves.",style:"margin-top:8px"})])]))})}
- catch(e){$("dnote").textContent=e.message||"Could not load"}}
-async function month(){$("mlist").innerHTML="";$("mnote").textContent="Loading...";
- try{const r=await call("tMonth",$("mo").value),rows=r.rows.filter(x=>x.n>0||x.l>0||x.h>0).sort((a,b)=>b.n-a.n||b.l-a.l||b.h-a.h),zero=r.rows.length-rows.length;
-  $("mnote").textContent=r.days?r.days+" class days recorded. "+zero+" students had no absences or leave.":"No attendance recorded in this month.";
-  rows.forEach(x=>{const w=r.days?Math.min(100,100*x.n/r.days):0;
-   $("mlist").appendChild(mk("div",{className:"mrow"},[mk("div",{className:"tx"},[mk("b",{textContent:x.name,className:"nmlink",onclick:()=>openProfile(x.roll)}),mk("small",{textContent:x.roll}),
-    mk("div",{className:"trk"},[mk("i",{className:cls(x.n),style:"width:"+w+"%"})])]),mk("div",{className:"c"},[document.createTextNode(x.n),...((x.l||x.h)?[mk("small",{textContent:[x.l?x.l+" leave":"",x.h?x.h+" half":""].filter(Boolean).join(" · ")})]:[])])]))})}
- catch(e){$("mnote").textContent=e.message||"Could not load"}}
-
-/* ---------- students + profile ---------- */
-function drawSt(){const q=$("sq").value.trim().toLowerCase(),b=$("slist");b.innerHTML="";
- ST.slice().sort((a,b)=>a.roll.localeCompare(b.roll,undefined,{numeric:true})).filter(s=>!q||(s.name+" "+s.roll).toLowerCase().includes(q)).forEach(s=>{
-  const pr=mk("button",{className:"btn sm",textContent:"Profile"}),e=mk("button",{className:"btn alt sm",textContent:"Edit"}),d=mk("button",{className:"btn dng sm",textContent:"Remove"});
-  pr.onclick=()=>openProfile(s.roll);e.onclick=()=>openForm(s);
-  d.onclick=async()=>{if(!confirm("Remove "+s.name+" from the class list? Past records are kept."))return;d.disabled=true;
-   try{ST=await call("tDeleteStudent",s.roll);drawSt();toast("Removed")}catch(x){toast(x.message||"Error");d.disabled=false}};
-  b.appendChild(mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:s.name}),mk("small",{textContent:s.roll+" · S/O "+s.father+" · "+s.phone+(s.joined?" · joined "+s.joined:"")})]),pr,e,d]))});
- if(!b.children.length)b.appendChild(mk("div",{className:"empty",textContent:"No students found."}))}
-async function loadSt(){try{ST=await call("tStudents");drawSt()}catch(e){$("slist").textContent=e.message||"Could not load"}}
-function openForm(s){edit=s?s.roll:"";$("ft").textContent=s?"Edit student":"Add student";$("fr").value=s?s.roll:"";$("fn").value=s?s.name:"";$("ff").value=s?s.father:"";$("fp").value=s?s.phone:"";$("fj").value=s?(s.joined||""):iso;$("fmsg").textContent="";openSheet("pS");$("fr").focus()}
-$("add").onclick=()=>openForm(null);$("sq").oninput=drawSt;
-$("fs").onclick=async()=>{$("fmsg").textContent="Saving...";try{ST=await call("tSaveStudent",edit,{roll:$("fr").value,name:$("fn").value,father:$("ff").value,phone:$("fp").value,joined:$("fj").value});closeSheet();drawSt();toast("Saved")}catch(e){$("fmsg").textContent=e.message||"Error"}};
-async function openProfile(roll){show(6);const b=$("pbody");b.innerHTML="";b.appendChild(mk("div",{className:"empty",textContent:"Loading..."}));
- try{const p=await call("tProfile",roll);b.innerHTML="";drawProfile(p)}catch(e){b.innerHTML="";b.appendChild(mk("div",{className:"empty",textContent:e.message||"Could not load"}))}}
-function drawProfile(p){const b=$("pbody"),s=p.student,ml=m=>new Date(m+"-15T12:00:00").toLocaleDateString("en-GB",{month:"short",year:"numeric"});
- b.appendChild(mk("div",{className:"card"},[mk("div",{style:"font-size:18px;font-weight:800",textContent:s.name}),mk("div",{className:"mu",textContent:s.roll+" · S/O "+s.father}),mk("div",{className:"ph"},[callBtn(s.phone),mk("span",{textContent:s.phone})])]));
- const tile=(v,l)=>mk("div",{className:"stat"},[mk("b",{textContent:String(v)}),mk("span",{textContent:l})]);
- b.appendChild(mk("div",{className:"stats"},[tile(p.pct==null?"-":p.pct+"%","Attendance"),tile(p.absent,"Absent"),tile(p.leave,"On leave"),tile(p.half,"Half leave")]));
- if(p.streak>=2)b.appendChild(mk("div",{className:"card al"},[mk("b",{textContent:"Absent "+p.streak+" class days in a row"})]));
- b.appendChild(mk("p",{className:"mu",style:"font-size:13px;margin:0 2px 8px",textContent:p.days+" class days recorded. Leave and half leave count as present."}));
- const list=(title,arr,fn)=>{if(!arr.length)return;b.appendChild(mk("h3",{textContent:title}));arr.forEach(x=>b.appendChild(fn(x)))};
- list("By month",p.months,x=>mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:ml(x.m)})]),mk("span",{className:"mu",textContent:x.a+" absent · "+x.l+" leave · "+x.h+" half"})]));
- list("Absences and calls",p.absentDays,x=>mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:fmt(x.d)}),mk("small",{textContent:x.r||"No remarks"})]),mk("span",{className:"badge "+(x.o==="Informed"?"":x.o?"w":"h"),textContent:x.o||"Not called"})]));
- list("Leaves",p.leaveDays,x=>mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:fmt(x.d)}),mk("small",{textContent:x.reason||"Approved leave"})])]));
- list("Half leaves",p.halfDays,x=>mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{textContent:fmt(x.d)}),mk("small",{textContent:x.reason||""})])]))}
-
-/* ---------- settings + pdf ---------- */
-$("setpin").onclick=async()=>{$("pm").textContent="Saving";try{const p=await call("tSetCrPin",$("np").value);$("cur").textContent="Current PIN: "+p;$("np").value="";$("pm").textContent="PIN changed"}catch(e){$("pm").textContent=e.message||"Error"}};
-function dl(b64,name){const bin=atob(b64),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
- const url=URL.createObjectURL(new Blob([u],{type:"application/pdf"}));if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank");return}const a=mk("a",{href:url,download:name});document.body.appendChild(a);a.click();a.remove()}
-$("pdf").onclick=async()=>{$("pdf").disabled=true;toast("Preparing PDF...");try{dl(await call("tPdf",D()),"Absent_Report_"+D()+".pdf")}catch(e){toast(e.message||"PDF failed")}$("pdf").disabled=false};
-$("mpdf").onclick=async()=>{$("mpdf").disabled=true;toast("Preparing PDF...");try{dl(await call("tMonthPdf",$("mo").value),"Monthly_Summary_"+$("mo").value+".pdf")}catch(e){toast(e.message||"PDF failed")}$("mpdf").disabled=false};
-/* ---------- classes on this device ---------- */
-function resetAll(){L=[];LV=[];HF=[];RM=[];ALL=[];ST=[];$("list").innerHTML="";$("hist").innerHTML="";["sA","sL","sC","sP"].forEach(i=>$(i).textContent="-")}
-function drawCls(){const s=$("cls");s.innerHTML="";CFG.list.forEach((x,i)=>s.appendChild(mk("option",{value:String(i),textContent:x.n,selected:i===CFG.cur})));s.appendChild(mk("option",{value:"add",textContent:"+ Add class"}))}
-function openSetup(){["sn","su","sk"].forEach(i=>$(i).value="");$("smsg").textContent="";$("scn").hidden=!CFG.list.length;show(0)}
-$("cls").onchange=e=>{if(e.target.value==="add"){drawCls();openSetup();return}CFG.cur=+e.target.value;saveCfg();resetAll();show(1);load()};
-$("ssv").onclick=()=>{try{addClass($("sn").value,$("su").value,$("sk").value)}catch(e){$("smsg").textContent=e.message;return}drawCls();resetAll();show(1);load()};
-$("scn").onclick=()=>show(1);
-$("addc").onclick=openSetup;
-function drawClasses(){const c=$("clist");c.innerHTML="";
- CFG.list.forEach((x,i)=>{const b=mk("button",{className:"btn dng sm",textContent:"Remove"});
-  b.onclick=()=>{if(!confirm("Remove "+x.n+" from this phone? Your records in Google Sheets are not affected."))return;CFG.list.splice(i,1);CFG.cur=0;saveCfg();drawCls();
-   if(!CFG.list.length){openSetup();return}resetAll();drawClasses();load()};
-  c.appendChild(rowCard({name:x.n+(i===CFG.cur?" (open)":"")},x.u.slice(0,48)+"...",b))})}
-function boot(){const h=location.hash.replace(/^#/,"");
- if(h){const p=new URLSearchParams(h);if(p.get("u")&&p.get("k")){try{addClass(p.get("c")||"Class",p.get("u"),p.get("k"))}catch(e){}}history.replaceState(null,"",location.pathname+location.search)}
- drawCls();if(!active()){openSetup();return}show(1);load()}
+function showSetup(msg){$("login").hidden=false;$("main").hidden=true;$("bar").hidden=true;$("rst").hidden=true;
+ $("su").value=(CFG&&CFG.u)||$("su").value;$("sn").value=(CFG&&CFG.n)||$("sn").value;$("pin").value="";$("err").textContent=msg||"";$("cname").textContent="Class representative"}
+function showMain(){$("login").hidden=true;$("main").hidden=false;$("rst").hidden=false;$("cname").textContent="Class representative · "+CFG.n}
+async function loadDay(){$("state").textContent="Loading...";
+ try{const r=await call("crLoad",CFG.pin,$("dt").value);lastDate=$("dt").value;dirty=false;
+  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";$("bar").hidden=!!NC;
+  $("dlabel").textContent=new Date($("dt").value+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  $("state").textContent=(A.size||H.size)?"Already submitted":"";draw()}
+ catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else{$("state").textContent="";toast(e.message||"Could not load")}}}
+$("go").onclick=async()=>{const u=$("su").value.trim(),pin=$("pin").value.trim(),n=$("sn").value.trim()||"Class";$("err").textContent="";
+ if(!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(u)){$("err").textContent="The web app link must start with https://script.google.com and end with /exec";return}
+ if(!pin){$("err").textContent="Enter the class PIN";return}
+ $("go").disabled=true;const prev=CFG;CFG={u:u,pin:pin,n:n};
+ try{await call("crLoad",pin,today);saveCfg();showMain();await loadDay()}
+ catch(e){CFG=prev;$("err").textContent=e.message||"Could not connect"}$("go").disabled=false};
+$("dt").onchange=()=>{if(dirty&&!confirm("You have changes that are not submitted. Discard them?")){$("dt").value=lastDate;return}loadDay()};
+$("rst").onclick=()=>{if(!confirm("Disconnect this phone from the class?"))return;CFG=null;saveCfg();showSetup("")};
+$("q").oninput=draw;$("fAll").onclick=()=>{only=false;$("fAll").className="on";$("fAb").className="";draw()};
+$("fAb").onclick=()=>{only=true;$("fAb").className="on";$("fAll").className="";draw()};
+$("sub").onclick=async()=>{$("sub").disabled=true;
+ try{const n=await call("crSubmit",CFG.pin,$("dt").value,[...A],[...H]);dirty=false;$("state").textContent="Submitted";toast(n+" absent, "+H.size+" half leave submitted")}
+ catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else toast(e.message||"Submit failed. Try again.")}$("sub").disabled=false};
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-boot();
+(function boot(){const h=location.hash.replace(/^#/,"");
+ if(h){const q=new URLSearchParams(h);if(q.get("u")){$("su").value=q.get("u")}if(q.get("c")){$("sn").value=q.get("c")}history.replaceState(null,"",location.pathname+location.search)}
+ if(CFG&&CFG.u&&CFG.pin){showMain();loadDay()}else showSetup("")})();
 </script></body></html>
