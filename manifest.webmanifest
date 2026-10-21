@@ -1,6 +1,6 @@
 {
-  "name": "GCT Attendance - CR",
-  "short_name": "CR Attendance",
+  "name": "GCT Attendance - Incharge",
+  "short_name": "Attendance",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
