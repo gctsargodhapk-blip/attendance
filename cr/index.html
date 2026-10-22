@@ -1,1 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CR Attendance</title>
+<meta name="theme-color" content="#0b5d4b"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="CR Attendance">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#101828;--mu:#667085;--pine:#0b5d4b;--pine2:#0e7a63;--bg:#eef3f1;--card:#fff;--ln:#d7e0dc;--red:#b42318;--redbg:#fdecea}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 Manrope,system-ui,sans-serif}
+.top{background:var(--pine);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center}
+.mono{width:46px;height:46px;border-radius:12px;background:#fff;display:grid;place-items:center;padding:5px}.mono img{width:100%;height:100%;object-fit:contain}
+.top h1{font-size:18px;margin:0;font-weight:800}.top p{margin:0;font-size:13px;opacity:.85}
+.wrap{max-width:640px;margin:0 auto;padding:14px 14px 110px}
+.panel{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:18px;margin-top:16px}
+.panel h2{margin:0 0 4px;font-size:20px}.panel p{margin:0 0 14px;color:var(--mu)}
+label{display:block;font-weight:700;font-size:13px;margin:12px 0 5px}
+input{font:inherit;width:100%;padding:12px;border:1px solid var(--ln);border-radius:10px;background:#fff;color:var(--ink)}
+input:focus,button:focus-visible{outline:3px solid #9fd8c8;outline-offset:1px}
+.btn{font:inherit;font-weight:800;background:var(--pine);color:#fff;border:0;border-radius:12px;padding:13px 20px;cursor:pointer}
+.btn:disabled{opacity:.5}.btn.full{width:100%;margin-top:18px}
+.tools{position:sticky;top:0;background:var(--bg);padding:12px 0 8px;z-index:3}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;color:var(--mu);font-size:13px;font-weight:700}
+.seg{display:flex;gap:8px;margin-top:8px}.seg button{font:inherit;font-weight:700;border:1px solid var(--ln);background:#fff;color:var(--ink);padding:7px 14px;border-radius:99px}
+.seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:11px 12px;margin-bottom:8px;color:var(--ink);cursor:pointer}
+.row .no{width:42px;font-weight:800;font-size:20px;color:var(--pine);letter-spacing:-.5px}
+.row .nm{font-weight:700}.row small{display:block;color:var(--mu);font-weight:500}
+.row .mk{margin-left:auto;width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);display:grid;place-items:center;font-weight:800;color:transparent}
+.row.lv{background:#fdf3dc;border-color:#ecd49a;cursor:default}.row.lv .no{color:#b7791f}.row.lv .mk{background:#b7791f;border-color:#b7791f;color:#fff}
+.row.hf{background:#e8f0fb;border-color:#b9cdee}.row.hf .no{color:#2563a8}.row.hf .mk{background:#2563a8;border-color:#2563a8;color:#fff}
+.sec{font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mu);margin:14px 2px 8px}.sec.lv{color:#b7791f}
+.row.ab{background:var(--redbg);border-color:#f1b5ae}.row.ab .no{color:var(--red)}.row.ab .mk{background:var(--red);border-color:var(--red);color:#fff}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--ln);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.cnt{font-size:30px;font-weight:800;line-height:1;color:var(--red)}.cnt small{display:block;font-size:12px;color:var(--mu);font-weight:700;margin-top:3px}
+.bar .btn{margin-left:auto;padding:14px 22px}
+#toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-weight:700;font-size:14px;display:none;max-width:90%;text-align:center}
+.err{color:var(--red);font-weight:700;margin-top:10px;min-height:20px}
+[hidden]{display:none!important}
+.rst{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:8px;padding:6px 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.top{padding-top:calc(14px + env(safe-area-inset-top,0px))}
+</style></head><body>
+<div class="top"><div class="mono"><img src="../logo.png" alt="TEVTA logo"></div><div><h1>Attendance</h1><p id="cname">Class representative</p></div><button class="rst" id="rst" hidden>Reset</button></div>
+<div class="wrap">
+ <div id="login" class="panel"><h2>Connect your class</h2><p>Enter these once. They are saved only on this phone.</p>
+  <label for="su">Web app link</label><input id="su" type="url" placeholder="https://script.google.com/.../exec" autocomplete="off">
+  <label for="sn">Class name</label><input id="sn" placeholder="e.g. Third Year C" autocomplete="off">
+  <label for="pin">Class PIN</label><input id="pin" type="password" inputmode="numeric" autocomplete="off">
+  <button class="btn full" id="go">Connect</button><div class="err" id="err"></div></div>
+ <div id="main" hidden>
+  <div class="tools"><div class="meta"><span id="dlabel"></span><span id="state"></span></div>
+   <input id="dt" type="date" style="margin-bottom:8px" aria-label="Date">
+   <input id="q" type="search" placeholder="Search by name or roll number">
+   <div class="seg"><button id="fAll" class="on">All students</button><button id="fAb">Marked only</button></div><p style="margin:8px 0 0;font-size:12px;color:var(--mu)">Tap once = Absent &middot; twice = Half leave &middot; three times = clear &middot; amber L = approved leave (locked)</p></div>
+  <div id="list"></div></div>
+</div>
+<div class="bar" id="bar" hidden><div class="in"><div class="cnt"><span id="n">0</span><small id="of"></small></div>
+ <button class="btn" id="sub">Submit absentees</button></div></div>
+<div id="toast"></div>
+<script>
+const $=i=>document.getElementById(i);let S=[],A=new Set(),Lv=new Set(),H=new Set(),NC='',only=false,dirty=false,lastDate="",CFG=null;
+try{CFG=JSON.parse(localStorage.getItem("gct_cr")||"null")}catch(e){}
+const saveCfg=()=>{try{CFG?localStorage.setItem("gct_cr",JSON.stringify(CFG)):localStorage.removeItem("gct_cr")}catch(e){}};
+async function api(fn,args){let res;
+ try{res=await fetch(CFG.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:fn,args:args}),redirect:"follow"})}
+ catch(e){throw new Error("No connection. Check your internet and try again.")}
+ let j;try{j=await res.json()}catch(e){throw new Error("Server error. Ask your teacher to check the app link.")}
+ if(!j.ok)throw new Error(j.error);return j.data}
+const call=(fn,...a)=>api(fn,a);
+const t=new Date(),today=new Date(t-t.getTimezoneOffset()*6e4).toISOString().slice(0,10);$("dt").value=today;
+function toast(m){const e=$("toast");e.textContent=m;e.style.display="block";clearTimeout(e._t);e._t=setTimeout(()=>e.style.display="none",2600)}
+function sec(t,lv){const d=document.createElement("div");d.className="sec"+(lv?" lv":"");d.textContent=t;return d}
+function row(s){const lv=Lv.has(s.roll),b=document.createElement("button"),a=A.has(s.roll),h=H.has(s.roll);b.className="row"+(a?" ab":h?" hf":lv?" lv":"");
+ b.innerHTML='<span class="no"></span><span><span class="nm"></span><small></small></span><span class="mk">A</span>';
+ b.querySelector(".no").textContent=s.roll.split("-").pop();b.querySelector(".nm").textContent=s.name;b.querySelector("small").textContent=s.roll;
+ b.querySelector(".mk").textContent=lv?"L":h?"H":"A";if(h)b.querySelector("small").textContent=s.roll+" · Half leave";
+ if(lv){b.querySelector("small").textContent=s.roll+" · On leave";b.onclick=()=>toast("Approved leave. This cannot be changed.")}
+ else b.onclick=()=>{if(a){A.delete(s.roll);H.add(s.roll)}else if(h){H.delete(s.roll)}else A.add(s.roll);dirty=true;$("state").textContent="Not submitted yet";count();draw()};
+ return b}
+function draw(){const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";
+ if(NC){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2>No class on this date</h2><p></p>";p.querySelector("p").textContent=NC;L.appendChild(p);count();return}
+ const base=S.filter(s=>(!only||A.has(s.roll)||H.has(s.roll))&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)));
+ const ls=(only?[]:S.filter(s=>Lv.has(s.roll)&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)))),rest=base.filter(s=>!Lv.has(s.roll));
+ if(ls.length){L.appendChild(sec("On approved leave ("+ls.length+")",1));ls.forEach(s=>L.appendChild(row(s)))}
+ if(rest.length){if(ls.length)L.appendChild(sec("Class list"));rest.forEach(s=>L.appendChild(row(s)))}
+ if(!L.children.length)L.innerHTML='<div class="panel">No students match.</div>';count()}
+function count(){$("n").textContent=A.size;$("of").textContent="absent of "+S.length+(H.size?" · "+H.size+" half leave":"")}
 
+function showSetup(msg){$("login").hidden=false;$("main").hidden=true;$("bar").hidden=true;$("rst").hidden=true;
+ $("su").value=(CFG&&CFG.u)||$("su").value;$("sn").value=(CFG&&CFG.n)||$("sn").value;$("pin").value="";$("err").textContent=msg||"";$("cname").textContent="Class representative"}
+function showMain(){$("login").hidden=true;$("main").hidden=false;$("rst").hidden=false;$("cname").textContent="Class representative · "+CFG.n}
+async function loadDay(){$("state").textContent="Loading...";
+ try{const r=await call("crLoad",CFG.pin,$("dt").value);lastDate=$("dt").value;dirty=false;
+  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";$("bar").hidden=!!NC;
+  $("dlabel").textContent=new Date($("dt").value+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  $("state").textContent=(A.size||H.size)?"Already submitted":"";draw()}
+ catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else{$("state").textContent="";toast(e.message||"Could not load")}}}
+$("go").onclick=async()=>{const u=$("su").value.trim(),pin=$("pin").value.trim(),n=$("sn").value.trim()||"Class";$("err").textContent="";
+ if(!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(u)){$("err").textContent="The web app link must start with https://script.google.com and end with /exec";return}
+ if(!pin){$("err").textContent="Enter the class PIN";return}
+ $("go").disabled=true;const prev=CFG;CFG={u:u,pin:pin,n:n};
+ try{await call("crLoad",pin,today);saveCfg();showMain();await loadDay()}
+ catch(e){CFG=prev;$("err").textContent=e.message||"Could not connect"}$("go").disabled=false};
+$("dt").onchange=()=>{if(dirty&&!confirm("You have changes that are not submitted. Discard them?")){$("dt").value=lastDate;return}loadDay()};
+$("rst").onclick=()=>{if(!confirm("Disconnect this phone from the class?"))return;CFG=null;saveCfg();showSetup("")};
+$("q").oninput=draw;$("fAll").onclick=()=>{only=false;$("fAll").className="on";$("fAb").className="";draw()};
+$("fAb").onclick=()=>{only=true;$("fAb").className="on";$("fAll").className="";draw()};
+$("sub").onclick=async()=>{$("sub").disabled=true;
+ try{const n=await call("crSubmit",CFG.pin,$("dt").value,[...A],[...H]);dirty=false;$("state").textContent="Submitted";toast(n+" absent, "+H.size+" half leave submitted")}
+ catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else toast(e.message||"Submit failed. Try again.")}$("sub").disabled=false};
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+(function boot(){const h=location.hash.replace(/^#/,"");
+ if(h){const q=new URLSearchParams(h);if(q.get("u")){$("su").value=q.get("u")}if(q.get("c")){$("sn").value=q.get("c")}history.replaceState(null,"",location.pathname+location.search)}
+ if(CFG&&CFG.u&&CFG.pin){showMain();loadDay()}else showSetup("")})();
+</script></body></html>
