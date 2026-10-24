@@ -60,7 +60,7 @@ input:focus,button:focus-visible{outline:3px solid #9fd8c8;outline-offset:1px}
  <button class="btn" id="sub">Submit absentees</button></div></div>
 <div id="toast"></div>
 <script>
-const $=i=>document.getElementById(i);let S=[],A=new Set(),Lv=new Set(),H=new Set(),NC='',only=false,dirty=false,lastDate="",CFG=null;
+const $=i=>document.getElementById(i);let S=[],A=new Set(),Lv=new Set(),H=new Set(),NC='',LK=false,only=false,dirty=false,lastDate="",CFG=null;
 try{CFG=JSON.parse(localStorage.getItem("gct_cr")||"null")}catch(e){}
 const saveCfg=()=>{try{CFG?localStorage.setItem("gct_cr",JSON.stringify(CFG)):localStorage.removeItem("gct_cr")}catch(e){}};
 async function api(fn,args){let res;
@@ -80,7 +80,7 @@ function row(s){const lv=Lv.has(s.roll),b=document.createElement("button"),a=A.h
  else b.onclick=()=>{if(a){A.delete(s.roll);H.add(s.roll)}else if(h){H.delete(s.roll)}else A.add(s.roll);dirty=true;$("state").textContent="Not submitted yet";count();draw()};
  return b}
 function draw(){const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";
- if(NC){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2>No class on this date</h2><p></p>";p.querySelector("p").textContent=NC;L.appendChild(p);count();return}
+ if(NC||LK){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2></h2><p></p>";p.querySelector("h2").textContent=NC?"No class on this date":"This day is locked";p.querySelector("p").textContent=NC||"Your teacher has closed attendance for this date. Ask your teacher if something needs to change.";L.appendChild(p);count();return}
  const base=S.filter(s=>(!only||A.has(s.roll)||H.has(s.roll))&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)));
  const ls=(only?[]:S.filter(s=>Lv.has(s.roll)&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)))),rest=base.filter(s=>!Lv.has(s.roll));
  if(ls.length){L.appendChild(sec("On approved leave ("+ls.length+")",1));ls.forEach(s=>L.appendChild(row(s)))}
@@ -93,7 +93,7 @@ function showSetup(msg){$("login").hidden=false;$("main").hidden=true;$("bar").h
 function showMain(){$("login").hidden=true;$("main").hidden=false;$("rst").hidden=false;$("cname").textContent="Class representative · "+CFG.n}
 async function loadDay(){$("state").textContent="Loading...";
  try{const r=await call("crLoad",CFG.pin,$("dt").value);lastDate=$("dt").value;dirty=false;
-  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";$("bar").hidden=!!NC;
+  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";LK=!!r.locked;$("bar").hidden=!!(NC||LK);
   $("dlabel").textContent=new Date($("dt").value+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
   $("state").textContent=(A.size||H.size)?"Already submitted":"";draw()}
  catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else{$("state").textContent="";toast(e.message||"Could not load")}}}
