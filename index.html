@@ -41,6 +41,8 @@ input:focus,button:focus-visible,select:focus{outline:3px solid #9fd8c8;outline-
 .dl{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.lab{font-weight:800;font-size:12px;padding:4px 9px;border-radius:99px}.lab.r{background:var(--redbg);color:var(--red)}.lab.a{background:var(--ambbg);color:var(--amb)}.lab.b{background:#e8f0fb;color:#2563a8}
 .pill{background:#f1f5f3;border:1px solid var(--ln);border-radius:99px;padding:3px 10px;font-size:13px}
 .nmlink{cursor:pointer;text-decoration:underline;text-decoration-color:var(--ln);text-underline-offset:3px}
+.trend{display:flex;align-items:flex-end;gap:4px;height:124px}.tc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;min-width:0}.tc i{display:block;width:100%;max-width:22px;border-radius:5px 5px 2px 2px}.tv{font-size:9px;color:var(--mu);font-weight:700}.tl{font-size:10px;color:var(--mu)}
+.wd{display:flex;align-items:center;gap:8px;margin:8px 0}.wd span{width:34px;font-weight:700;font-size:13px}.wd .trk{flex:1;margin:0}.wd b{width:42px;text-align:right}
 .empty{text-align:center;color:var(--mu);padding:26px 10px;font-weight:700}
 .sr{flex-wrap:wrap;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px}.sr .tx{flex:1;min-width:140px}.sr small{display:block;color:var(--mu)}
 .pl{max-height:170px;overflow:auto;border:1px solid var(--ln);border-radius:10px;margin-top:6px;background:#fff}.pl button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--ln);background:#fff;padding:10px 12px;font:inherit;cursor:pointer}.pl button:last-child{border-bottom:0}.pl button.on{background:#e3f0ec;font-weight:800}
@@ -69,10 +71,18 @@ h2{font-size:18px;margin:4px 0 10px}h3{font-size:15px;margin:16px 0 8px}.mu{colo
   <div class="rm"><button class="btn" id="ssv">Connect</button><button class="btn alt" id="scn">Cancel</button><span class="sv" id="smsg" style="color:var(--red)"></span></div></div>
 </section>
 <section id="v1">
+ <div class="seg" id="cseg"><button id="cT" class="on">Today</button><button id="cF">Follow-up</button></div>
+ <div id="ctoday">
+ <div id="lkc"></div>
  <div id="ncb"></div>
  <div class="stats"><div class="stat"><b id="sA">-</b><span>Absent</span></div><div class="stat"><b id="sL">-</b><span>On leave</span></div><div class="stat"><b id="sC">-</b><span>Called</span></div><div class="stat"><b id="sP">-</b><span>To call</span></div></div>
  <div id="lnk"></div><div id="alerts"></div><div id="list"></div>
  <div class="bar" style="margin-top:6px"><button class="btn" id="pdf" disabled>Day report PDF</button></div>
+ </div>
+ <div id="cfollow" hidden>
+  <h3>To retry</h3><div id="rtry"></div>
+  <h3>Wrong numbers</h3><div id="wrng"></div>
+ </div>
 </section>
 
 <section id="v2" hidden>
@@ -87,9 +97,10 @@ h2{font-size:18px;margin:4px 0 10px}h3{font-size:15px;margin:16px 0 8px}.mu{colo
 
 <section id="v3" hidden>
  <h2>Records</h2>
- <div class="seg"><button id="sD" class="on">Daily</button><button id="sM">Monthly</button></div>
+ <div class="seg"><button id="sD" class="on">Daily</button><button id="sM">Monthly</button><button id="sB">Dashboard</button></div>
  <div id="rd"><div class="bar"><input id="dmo" type="month" aria-label="Month"></div><p class="mu" id="dnote"></p><div id="dlist"></div></div>
  <div id="rm" hidden><div class="bar"><input id="mo" type="month" aria-label="Month"><button class="btn" id="mpdf">Month report PDF</button></div><p class="mu" id="mnote"></p><div id="mlist"></div></div>
+ <div id="rb" hidden><div id="bbody"></div></div>
 </section>
 
 <section id="v4" hidden>
@@ -260,17 +271,69 @@ $("nb").onclick=async()=>{$("nm").textContent="Saving";const go=f=>call("tSetNoC
   $("nr").value="";$("nm").textContent="";toast("Saved");load()}catch(e){$("nm").textContent=e.message||"Error"}};
 
 /* ---------- load ---------- */
-async function load(){$("sA").textContent="-";
- try{const r=await call("tLoad",D());L=r.list;LV=r.leaves;HF=r.half;RM=r.removed;ALL=r.all;AT=r.alertAt;$("pdf").disabled=false;
-  $("cur").textContent="Current PIN: "+r.crPin;
-  const h=$("hist");h.innerHTML="";h.appendChild(mk("option",{value:"",textContent:"Past records"}));r.dates.forEach(d=>h.appendChild(mk("option",{value:d,textContent:d})));
-  drawNc(r);drawCalls(r);drawLeaves(r)}
+let LK=false,FU=null;
+const CKEY=()=>{try{return typeof active==="function"&&active()?active().u.slice(-24):""}catch(e){return ""}};
+async function swrCall(fn,args,render){const k="c:"+CKEY()+":"+fn+JSON.stringify(args);
+ try{const c=localStorage.getItem(k);if(c)render(JSON.parse(c))}catch(e){}
+ const r=await call(fn,...args);
+ try{localStorage.setItem(k,JSON.stringify(r))}catch(e){try{Object.keys(localStorage).filter(x=>x.indexOf("c:")===0).forEach(x=>localStorage.removeItem(x))}catch(_){}}
+ render(r);return r}
+function drawLock(){const c=$("lkc");c.innerHTML="";const b=mk("button",{className:"btn sm "+(LK?"dng":"alt"),textContent:LK?"Unlock day":"Lock day"});
+ b.onclick=async()=>{if(!LK&&!confirm("Lock "+fmt(D())+"? The CR will not be able to change this day."))return;b.disabled=true;
+  try{await call("tSetLock",D(),!LK);toast(LK?"Day unlocked":"Day locked");load()}catch(e){toast(e.message||"Error");b.disabled=false}};
+ c.appendChild(mk("div",{className:"sr",style:"padding:8px 12px"},[mk("div",{className:"tx"},[mk("b",{textContent:LK?"This day is locked":"Attendance is open to the CR"}),mk("small",{textContent:LK?"The CR cannot change it.":"Lock it when your calls are done."})]),b]))}
+function applyLoad(r){L=r.list;LV=r.leaves;HF=r.half;RM=r.removed;ALL=r.all;AT=r.alertAt;LK=!!r.locked;$("pdf").disabled=false;
+ $("cur").textContent="Current PIN: "+r.crPin;
+ const h=$("hist");h.innerHTML="";h.appendChild(mk("option",{value:"",textContent:"Past records"}));r.dates.forEach(d=>h.appendChild(mk("option",{value:d,textContent:d})));
+ drawNc(r);drawLock();drawCalls(r);drawLeaves(r)}
+async function load(swr){if(!swr)$("sA").textContent="-";
+ try{if(swr)await swrCall("tLoad",[D()],applyLoad);else applyLoad(await call("tLoad",D()));if(swr)refreshFollow()}
  catch(e){$("list").innerHTML="";$("list").appendChild(mk("div",{className:"empty",textContent:e.message||"Could not load"}))}}
-$("go").onclick=load;$("dt").onchange=load;$("hist").onchange=e=>{if(e.target.value){$("dt").value=e.target.value;load()}};
+$("go").onclick=()=>load();$("dt").onchange=()=>load(true);$("hist").onchange=e=>{if(e.target.value){$("dt").value=e.target.value;load(true)}};
+
+/* ---------- follow-up: retry + wrong numbers ---------- */
+function setC(m){$("ctoday").hidden=m!=="t";$("cfollow").hidden=m!=="f";$("cT").classList.toggle("on",m==="t");$("cF").classList.toggle("on",m==="f");if(m==="f")loadFollow()}
+$("cT").onclick=()=>setC("t");$("cF").onclick=()=>setC("f");
+function drawFollow(r){FU=r;const n=r.retry.length+r.wrong.length;$("cF").textContent="Follow-up"+(n?" ("+n+")":"");
+ const rt=$("rtry"),wr=$("wrng");rt.innerHTML="";wr.innerHTML="";
+ if(!r.retry.length)rt.appendChild(mk("div",{className:"empty",textContent:"Nobody to retry."}));
+ if(!r.wrong.length)wr.appendChild(mk("div",{className:"empty",textContent:"No wrong numbers."}));
+ r.retry.forEach(x=>rt.appendChild(retryCard(x)));r.wrong.forEach(x=>wr.appendChild(wrongCard(x)))}
+async function loadFollow(fresh){try{if(fresh)drawFollow(await call("tFollowUp"));else await swrCall("tFollowUp",[],drawFollow)}catch(e){toast(e.message||"Could not load")}}
+function refreshFollow(){call("tFollowUp").then(drawFollow).catch(()=>{})}
+const head=(x,b)=>mk("div",{className:"hd"},[mk("div",{},[mk("div",{className:"nm nmlink",textContent:x.name,onclick:()=>openProfile(x.roll)}),mk("small",{textContent:x.roll+" · S/O "+x.father})]),mk("div",{className:"bd"},[b])]);
+function retryCard(x){const sv=mk("span",{className:"sv"}),chips=mk("div",{className:"chips"}),rem=mk("input",{type:"text",placeholder:"Remarks",value:x.r||""});
+ ["Informed","No answer","Wrong number","Switched off","Not needed"].forEach(o=>{const b=mk("button",{textContent:o,className:x.o===o?"on":""});
+  b.onclick=async()=>{sv.textContent="Saving";try{await call("tSave",x.d,x.roll,o,rem.value);toast("Saved");loadFollow(true)}catch(e){sv.textContent=e.message||"Error"}};chips.appendChild(b)});
+ return mk("div",{className:"card"},[head(x,mk("span",{className:"badge w",textContent:x.o+" · "+fmt(x.d)})),mk("div",{className:"ph"},[callBtn(x.phone),mk("span",{textContent:x.phone})]),chips,mk("div",{className:"rm"},[rem,sv])])}
+function wrongCard(x){const ph=mk("input",{type:"tel",value:x.phone,placeholder:"03001234567"}),sv=mk("span",{className:"sv",style:"color:var(--red)"}),save=mk("button",{className:"btn sm",textContent:"Save number"});
+ save.onclick=async()=>{save.disabled=true;sv.textContent="Saving";try{await call("tSetPhone",x.roll,ph.value);toast("Number saved. Student moved to retry.");loadFollow(true)}catch(e){sv.textContent=e.message||"Error";save.disabled=false}};
+ return mk("div",{className:"card"},[head(x,mk("span",{className:"badge h",textContent:"Wrong number · "+fmt(x.d)})),mk("div",{className:"rm",style:"margin-top:10px"},[ph,save,sv])])}
+
+/* ---------- dashboard ---------- */
+function drawDash(r){const b=$("bbody");b.innerHTML="";
+ if(!r.latest){b.appendChild(mk("div",{className:"empty",textContent:"No attendance recorded yet."}));return}
+ const x0=r.latest,tile=(v,l,c)=>mk("div",{className:"stat"},[mk("b",{textContent:String(v),style:c?"color:"+c:""}),mk("span",{textContent:l})]);
+ b.appendChild(mk("p",{className:"mu",style:"margin:0 2px 8px;font-size:13px",textContent:"Latest recorded day: "+fmt(x0.d)}));
+ b.appendChild(mk("div",{className:"stats"},[tile(x0.rate+"%","Attendance"),tile(x0.a,"Absent","var(--red)"),tile(x0.l,"On leave"),tile(x0.h,"Half leave")]));
+ b.appendChild(mk("div",{className:"stats"},[tile(r.month.rate==null?"-":r.month.rate+"%","This month"),tile(r.month.days,"Class days"),tile(r.month.low,"Below "+r.minPct+"%",r.month.low?"var(--red)":""),tile(r.top.length?r.top[0].n:0,"Most absences")]));
+ b.appendChild(mk("h3",{textContent:"Last "+r.trend.length+" class days"}));
+ const tr=mk("div",{className:"trend"});
+ r.trend.forEach(x=>{const col=x.rate<75?"var(--red)":x.rate<90?"var(--amb)":"var(--pine)";
+  tr.appendChild(mk("div",{className:"tc"},[mk("span",{className:"tv",textContent:String(x.rate)}),mk("i",{style:"height:"+Math.max(4,x.rate*.8)+"px;background:"+col}),mk("span",{className:"tl",textContent:x.d.slice(8)})]))});
+ b.appendChild(mk("div",{className:"card"},[tr]));
+ const mx=Math.max(1,...r.weekdays.map(x=>x.rate)),wc=mk("div",{className:"card"});
+ b.appendChild(mk("h3",{textContent:"Absence rate by weekday"}));
+ r.weekdays.forEach(x=>wc.appendChild(mk("div",{className:"wd"},[mk("span",{textContent:x.wd}),mk("div",{className:"trk"},[mk("i",{className:x.rate===mx&&x.rate>0?"h":"",style:"width:"+(100*x.rate/mx)+"%"})]),mk("b",{textContent:x.rate+"%"})])));
+ b.appendChild(wc);
+ if(r.top.length){b.appendChild(mk("h3",{textContent:"Most absences this month"}));
+  r.top.forEach(x=>b.appendChild(mk("div",{className:"sr"},[mk("div",{className:"tx"},[mk("b",{className:"nmlink",textContent:x.name,onclick:()=>openProfile(x.roll)}),mk("small",{textContent:x.roll})]),mk("span",{className:"badge "+cls(x.n),textContent:x.n+(x.n===1?" absence":" absences")})])))}}
+async function dash(){const b=$("bbody");if(!b.children.length)b.appendChild(mk("div",{className:"empty",textContent:"Loading..."}));
+ try{await swrCall("tDashboard",[],drawDash)}catch(e){b.innerHTML="";b.appendChild(mk("div",{className:"empty",textContent:e.message||"Could not load"}))}}
 
 /* ---------- records ---------- */
-function setR(m){rmode=m;$("rd").hidden=m!=="d";$("rm").hidden=m!=="m";$("sD").classList.toggle("on",m==="d");$("sM").classList.toggle("on",m==="m");m==="d"?daily():month()}
-$("sD").onclick=()=>setR("d");$("sM").onclick=()=>setR("m");$("dmo").onchange=daily;$("mo").onchange=month;
+function setR(m){rmode=m;$("rd").hidden=m!=="d";$("rm").hidden=m!=="m";$("rb").hidden=m!=="b";["D","M","B"].forEach(k=>$("s"+k).classList.toggle("on",m===k.toLowerCase()));m==="d"?daily():m==="m"?month():dash()}
+$("sD").onclick=()=>setR("d");$("sM").onclick=()=>setR("m");$("sB").onclick=()=>setR("b");$("dmo").onchange=daily;$("mo").onchange=month;
 async function daily(){const box=$("dlist");box.innerHTML="";$("dnote").textContent="Loading...";
  try{const r=await call("tDaily",$("dmo").value);
   $("dnote").textContent=r.days.length?r.days.length+" class days recorded"+(r.noclass.length?" · "+r.noclass.length+" no-class days":"")+".":(r.noclass.length?r.noclass.length+" no-class days.":"No attendance recorded in this month.");
@@ -339,7 +402,7 @@ function drawClasses(){const c=$("clist");c.innerHTML="";
   c.appendChild(rowCard({name:x.n+(i===CFG.cur?" (open)":"")},x.u.slice(0,48)+"...",b))})}
 function boot(){const h=location.hash.replace(/^#/,"");
  if(h){const p=new URLSearchParams(h);if(p.get("u")&&p.get("k")){try{addClass(p.get("c")||"Class",p.get("u"),p.get("k"))}catch(e){}}history.replaceState(null,"",location.pathname+location.search)}
- drawCls();if(!active()){openSetup();return}show(1);load()}
+ drawCls();if(!active()){openSetup();return}show(1);load(true)}
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 boot();
 </script></body></html>
