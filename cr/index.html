@@ -31,6 +31,7 @@ input:focus,button:focus-visible{outline:3px solid #9fd8c8;outline-offset:1px}
 .row.lv{background:#fdf3dc;border-color:#ecd49a;cursor:default}.row.lv .no{color:#b7791f}.row.lv .mk{background:#b7791f;border-color:#b7791f;color:#fff}
 .row.hf{background:#e8f0fb;border-color:#b9cdee}.row.hf .no{color:#2563a8}.row.hf .mk{background:#2563a8;border-color:#2563a8;color:#fff}
 .sec{font-weight:800;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mu);margin:14px 2px 8px}.sec.lv{color:#b7791f}
+.dlrow{display:flex;gap:8px;margin-top:12px}.dlrow input{flex:1;min-width:0}.dlrow .btn{padding:10px 14px;white-space:nowrap}
 .row.ab{background:var(--redbg);border-color:#f1b5ae}.row.ab .no{color:var(--red)}.row.ab .mk{background:var(--red);border-color:var(--red);color:#fff}
 .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--ln);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
 .bar .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px}
@@ -53,7 +54,7 @@ input:focus,button:focus-visible{outline:3px solid #9fd8c8;outline-offset:1px}
   <div class="tools"><div class="meta"><span id="dlabel"></span><span id="state"></span></div>
    <input id="dt" type="date" style="margin-bottom:8px" aria-label="Date">
    <input id="q" type="search" placeholder="Search by name or roll number">
-   <div class="seg"><button id="fAll" class="on">All students</button><button id="fAb">Marked only</button></div><p style="margin:8px 0 0;font-size:12px;color:var(--mu)">Tap once = Absent &middot; twice = Half leave &middot; three times = clear &middot; amber L = approved leave (locked)</p></div>
+   <div class="seg"><button id="fAll" class="on">All students</button><button id="fAb">Marked only</button></div><p style="margin:8px 0 0;font-size:12px;color:var(--mu)">Tap once = Absent &middot; twice = Half leave &middot; three times = clear &middot; amber L = approved leave (locked)</p><div class="dlrow"><input id="pdt" type="date" aria-label="Date for the image"><button class="btn" id="dl">Download PNG</button></div></div>
   <div id="list"></div></div>
 </div>
 <div class="bar" id="bar" hidden><div class="in"><div class="cnt"><span id="n">0</span><small id="of"></small></div>
@@ -77,10 +78,11 @@ function row(s){const lv=Lv.has(s.roll),b=document.createElement("button"),a=A.h
  b.querySelector(".no").textContent=s.roll.split("-").pop();b.querySelector(".nm").textContent=s.name;b.querySelector("small").textContent=s.roll;
  b.querySelector(".mk").textContent=lv?"L":h?"H":"A";if(h)b.querySelector("small").textContent=s.roll+" · Half leave";
  if(lv){b.querySelector("small").textContent=s.roll+" · On leave";b.onclick=()=>toast("Approved leave. This cannot be changed.")}
- else b.onclick=()=>{if(a){A.delete(s.roll);H.add(s.roll)}else if(h){H.delete(s.roll)}else A.add(s.roll);dirty=true;$("state").textContent="Not submitted yet";count();draw()};
+ else b.onclick=()=>{if(LK){if(a)return toast("Locked by your teacher. Only half leave can be changed.");if(h)H.delete(s.roll);else H.add(s.roll)}else if(a){A.delete(s.roll);H.add(s.roll)}else if(h){H.delete(s.roll)}else A.add(s.roll);dirty=true;$("state").textContent="Not submitted yet";count();draw()};
  return b}
 function draw(){const q=$("q").value.trim().toLowerCase(),L=$("list");L.innerHTML="";
- if(NC||LK){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2></h2><p></p>";p.querySelector("h2").textContent=NC?"No class on this date":"This day is locked";p.querySelector("p").textContent=NC||"Your teacher has closed attendance for this date. Ask your teacher if something needs to change.";L.appendChild(p);count();return}
+ if(NC){const p=document.createElement("div");p.className="panel";p.innerHTML="<h2></h2><p></p>";p.querySelector("h2").textContent=NC?"No class on this date":"This day is locked";p.querySelector("p").textContent=NC||"Your teacher has closed attendance for this date. Ask your teacher if something needs to change.";L.appendChild(p);count();return}
+ if(LK){const bn=document.createElement("div");bn.className="panel";bn.style.cssText="margin:0 0 10px;padding:12px;background:#fdf3dc;border-color:#ecd49a";bn.textContent="This day is locked by your teacher. You can only add or remove half leaves.";L.appendChild(bn)}
  const base=S.filter(s=>(!only||A.has(s.roll)||H.has(s.roll))&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)));
  const ls=(only?[]:S.filter(s=>Lv.has(s.roll)&&(!q||(s.name+" "+s.roll).toLowerCase().includes(q)))),rest=base.filter(s=>!Lv.has(s.roll));
  if(ls.length){L.appendChild(sec("On approved leave ("+ls.length+")",1));ls.forEach(s=>L.appendChild(row(s)))}
@@ -93,7 +95,7 @@ function showSetup(msg){$("login").hidden=false;$("main").hidden=true;$("bar").h
 function showMain(){$("login").hidden=true;$("main").hidden=false;$("rst").hidden=false;$("cname").textContent="Class representative · "+CFG.n}
 async function loadDay(){$("state").textContent="Loading...";
  try{const r=await call("crLoad",CFG.pin,$("dt").value);lastDate=$("dt").value;dirty=false;
-  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";LK=!!r.locked;$("bar").hidden=!!(NC||LK);
+  S=r.students;A=new Set(r.absent);H=new Set(r.half||[]);Lv=new Set(r.leave||[]);NC=r.noclass||"";LK=!!r.locked;$("bar").hidden=!!NC;
   $("dlabel").textContent=new Date($("dt").value+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
   $("state").textContent=(A.size||H.size)?"Already submitted":"";draw()}
  catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else{$("state").textContent="";toast(e.message||"Could not load")}}}
@@ -107,6 +109,61 @@ $("dt").onchange=()=>{if(dirty&&!confirm("You have changes that are not submitte
 $("rst").onclick=()=>{if(!confirm("Disconnect this phone from the class?"))return;CFG=null;saveCfg();showSetup("")};
 $("q").oninput=draw;$("fAll").onclick=()=>{only=false;$("fAll").className="on";$("fAb").className="";draw()};
 $("fAb").onclick=()=>{only=true;$("fAb").className="on";$("fAll").className="";draw()};
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function fit(x,t,max){if(x.measureText(t).width<=max)return t;while(t.length>1&&x.measureText(t+"…").width>max)t=t.slice(0,-1);return t+"…"}
+const FF="Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+function renderPng(r,d,cname,logo){
+ const nm={};r.students.forEach(s=>nm[s.roll]=s.name);
+ const grp=l=>(l||[]).map(k=>({k:k,n:nm[k]||k})).sort((a,b)=>a.k.localeCompare(b.k,undefined,{numeric:true}));
+ const ab=grp(r.absent),lv=grp(r.leave),hf=grp(r.half),total=r.students.length,present=Math.max(0,total-ab.length-lv.length-hf.length);
+ const W=1080,P=56,G=16,RH=46,CW=(W-2*P-56)/2,secs=[["Absent",ab,"#b42318","#fdecea"],["On leave",lv,"#b7791f","#fdf3dc"],["Half leave",hf,"#2563a8","#e8f0fb"]];
+ let H=482;secs.forEach(s=>{H+=64+(s[1].length?Math.ceil(s[1].length/2):1)*RH+28+22});H+=64;
+ const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+ x.fillStyle="#eef3f1";x.fillRect(0,0,W,H);
+ x.fillStyle="#0b5d4b";x.fillRect(0,0,W,230);
+ x.fillStyle="#fff";rr(x,P,52,126,126,24);x.fill();
+ if(logo&&logo.naturalWidth){const k=Math.min(98/logo.naturalWidth,98/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,P+63-w/2,115-h/2,w,h)}
+ x.textBaseline="alphabetic";x.textAlign="left";
+ x.fillStyle="#cfe3dc";x.font="700 22px "+FF;x.fillText("GOVERNMENT COLLEGE OF TECHNOLOGY, SARGODHA",P+156,88);
+ x.fillStyle="#fff";x.font="800 56px "+FF;x.fillText("Attendance Record",P+156,148);
+ x.fillStyle="#d6ebe4";x.font="600 28px "+FF;
+ x.fillText(cname+"  ·  "+new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"}),P+156,196);
+ x.textAlign="right";x.fillStyle="#667085";x.font="700 22px "+FF;x.fillText(total+" STUDENTS ENROLLED",W-P,266);x.textAlign="left";
+ const bw=(W-2*P-3*G)/4,by=292,stat=[["Present",present,"#137333"],["Absent",ab.length,"#b42318"],["On leave",lv.length,"#b7791f"],["Half leave",hf.length,"#2563a8"]];
+ stat.forEach((s,i)=>{const bx=P+i*(bw+G);x.fillStyle="#fff";rr(x,bx,by,bw,150,22);x.fill();
+  x.fillStyle=s[2];rr(x,bx+bw/2-28,by+14,56,8,4);x.fill();
+  x.textAlign="center";x.font="800 64px "+FF;x.fillText(String(s[1]),bx+bw/2,by+92);
+  x.fillStyle="#667085";x.font="700 22px "+FF;x.fillText(s[0].toUpperCase(),bx+bw/2,by+128);x.textAlign="left"});
+ let y=by+150+40;
+ secs.forEach(s=>{const t=s[0],l=s[1],cl=s[2],bg=s[3];
+  x.fillStyle=cl;rr(x,P,y,8,40,4);x.fill();
+  x.font="800 34px "+FF;x.fillText(t,P+24,y+32);const tw=x.measureText(t).width;
+  x.fillStyle=bg;rr(x,P+24+tw+16,y+2,70,36,18);x.fill();
+  x.fillStyle=cl;x.textAlign="center";x.font="800 24px "+FF;x.fillText(String(l.length),P+24+tw+16+35,y+28);x.textAlign="left";
+  y+=64;
+  const rows=l.length?Math.ceil(l.length/2):1,ch=rows*RH+28;
+  x.fillStyle="#fff";rr(x,P,y,W-2*P,ch,22);x.fill();
+  if(!l.length){x.fillStyle="#98a2b3";x.font="600 26px "+FF;x.fillText("None",P+28,y+46)}
+  else l.forEach((e,i)=>{const cx=Math.floor(i/rows),rw=i%rows,px=P+28+cx*CW,py=y+14+rw*RH+32;
+   x.fillStyle=cl;x.font="800 26px "+FF;x.fillText(e.k.split("-").pop(),px,py);
+   x.fillStyle="#101828";x.font="600 26px "+FF;x.fillText(fit(x,e.n,CW-90),px+62,py)});
+  y+=ch+22});
+ x.textAlign="center";x.fillStyle="#667085";x.font="600 22px "+FF;
+ x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})+"  ·  Government College of Technology, Sargodha",W/2,H-30);
+ return c}
+const CLASSNAME=()=>(CFG&&CFG.n)||"Class";
+async function makePng(r,d){try{await document.fonts.load("800 30px Manrope");await document.fonts.load("600 24px Manrope")}catch(e){}
+ const c=renderPng(r,d,CLASSNAME(),document.querySelector(".mono img"));
+ await new Promise(ok=>c.toBlob(b=>{const url=URL.createObjectURL(b);
+  if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank")}
+  else{const a=document.createElement("a");a.href=url;a.download="Attendance_"+d+".png";document.body.appendChild(a);a.click();a.remove()}ok()},"image/png"))}
+$("dl").onclick=async()=>{const d=$("pdt").value;if(!d){toast("Choose a date");return}$("dl").disabled=true;toast("Preparing image...");
+ try{const r=await call("crLoad",CFG.pin,d);
+  if(r.noclass)toast("No class on this date: "+r.noclass);
+  else if(!r.recorded)toast("No attendance was recorded for this date");
+  else await makePng(r,d)}
+ catch(e){toast(e.message||"Could not create the image")}$("dl").disabled=false};
+$("pdt").value=today;
 $("sub").onclick=async()=>{$("sub").disabled=true;
  try{const n=await call("crSubmit",CFG.pin,$("dt").value,[...A],[...H]);dirty=false;$("state").textContent="Submitted";toast(n+" absent, "+H.size+" half leave submitted")}
  catch(e){if(/wrong pin/i.test(e.message))showSetup("The class PIN has changed. Enter the new PIN.");else toast(e.message||"Submit failed. Try again.")}$("sub").disabled=false};
