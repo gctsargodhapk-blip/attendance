@@ -116,43 +116,83 @@ function renderPng(r,d,cname,logo){
  const nm={};r.students.forEach(s=>nm[s.roll]=s.name);
  const grp=l=>(l||[]).map(k=>({k:k,n:nm[k]||k})).sort((a,b)=>a.k.localeCompare(b.k,undefined,{numeric:true}));
  const ab=grp(r.absent),lv=grp(r.leave),hf=grp(r.half),total=r.students.length,present=Math.max(0,total-ab.length-lv.length-hf.length);
- const W=1080,P=56,G=16,RH=46,CW=(W-2*P-56)/2,secs=[["Absent",ab,"#b42318","#fdecea"],["On leave",lv,"#b7791f","#fdf3dc"],["Half leave",hf,"#2563a8","#e8f0fb"]];
- let H=482;secs.forEach(s=>{H+=64+(s[1].length?Math.ceil(s[1].length/2):1)*RH+28+22});H+=64;
+ const W=1080,P=56,IW=W-2*P,HH=290,GRN="#137333",RED="#b42318",AMB="#b7791f",BLU="#2563a8";
+ const secs=[["Absent",ab,RED,"#fdecea","#f3c1bb"],["On leave",lv,AMB,"#fdf3dc","#ecd49a"],["Half leave",hf,BLU,"#e8f0fb","#bcd0ee"]].filter((s,i)=>i===0||s[1].length);
+ const mc=document.createElement("canvas").getContext("2d");mc.font="700 24px "+FF;
+ const CH=54,GX=12,GY=12;
+ secs.forEach(s=>{let cx=0,cy=0;s.items=[];s[1].forEach(e=>{const t=fit(mc,e.n,520),w=12+38+12+mc.measureText(t).width+24;if(cx+w>IW){cx=0;cy+=CH+GY}s.items.push({e:e,t:t,x:cx,y:cy,w:w});cx+=w+GX});s.h=s[1].length?cy+CH:92});
+ let H=HH+30+290+36;secs.forEach(s=>{H+=60+s.h+34});H+=70;
  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
- x.fillStyle="#eef3f1";x.fillRect(0,0,W,H);
- x.fillStyle="#0b5d4b";x.fillRect(0,0,W,230);
- x.fillStyle="#fff";rr(x,P,52,126,126,24);x.fill();
- if(logo&&logo.naturalWidth){const k=Math.min(98/logo.naturalWidth,98/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,P+63-w/2,115-h/2,w,h)}
+ const shadow=on=>{x.shadowColor=on?"rgba(16,24,40,.12)":"transparent";x.shadowBlur=on?28:0;x.shadowOffsetY=on?10:0};
+ // page background
+ x.fillStyle="#edf3f0";x.fillRect(0,0,W,H);
+ // header with gradient + pattern
+ x.save();x.beginPath();x.rect(0,0,W,HH);x.clip();
+ const g=x.createLinearGradient(0,0,W,HH);g.addColorStop(0,"#06382e");g.addColorStop(1,"#12805f");x.fillStyle=g;x.fillRect(0,0,W,HH);
+ x.strokeStyle="rgba(255,255,255,.045)";x.lineWidth=2;for(let i=-HH;i<W;i+=26){x.beginPath();x.moveTo(i,HH);x.lineTo(i+HH,0);x.stroke()}
+ x.fillStyle="rgba(255,255,255,.06)";x.beginPath();x.arc(W-40,20,230,0,7);x.fill();x.beginPath();x.arc(W-250,HH+30,150,0,7);x.fill();
+ x.restore();
+ // logo badge
+ shadow(1);x.fillStyle="#fff";rr(x,P,60,128,128,28);x.fill();shadow(0);
+ if(logo&&logo.naturalWidth){const k=Math.min(100/logo.naturalWidth,100/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,P+64-w/2,124-h/2,w,h)}
+ // titles
  x.textBaseline="alphabetic";x.textAlign="left";
- x.fillStyle="#cfe3dc";x.font="700 22px "+FF;x.fillText("GOVERNMENT COLLEGE OF TECHNOLOGY, SARGODHA",P+156,88);
- x.fillStyle="#fff";x.font="800 56px "+FF;x.fillText("Attendance Record",P+156,148);
- x.fillStyle="#d6ebe4";x.font="600 28px "+FF;
- x.fillText(cname+"  ·  "+new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"}),P+156,196);
- x.textAlign="right";x.fillStyle="#667085";x.font="700 22px "+FF;x.fillText(total+" STUDENTS ENROLLED",W-P,266);x.textAlign="left";
- const bw=(W-2*P-3*G)/4,by=292,stat=[["Present",present,"#137333"],["Absent",ab.length,"#b42318"],["On leave",lv.length,"#b7791f"],["Half leave",hf.length,"#2563a8"]];
- stat.forEach((s,i)=>{const bx=P+i*(bw+G);x.fillStyle="#fff";rr(x,bx,by,bw,150,22);x.fill();
-  x.fillStyle=s[2];rr(x,bx+bw/2-28,by+14,56,8,4);x.fill();
-  x.textAlign="center";x.font="800 64px "+FF;x.fillText(String(s[1]),bx+bw/2,by+92);
-  x.fillStyle="#667085";x.font="700 22px "+FF;x.fillText(s[0].toUpperCase(),bx+bw/2,by+128);x.textAlign="left"});
- let y=by+150+40;
- secs.forEach(s=>{const t=s[0],l=s[1],cl=s[2],bg=s[3];
-  x.fillStyle=cl;rr(x,P,y,8,40,4);x.fill();
-  x.font="800 34px "+FF;x.fillText(t,P+24,y+32);const tw=x.measureText(t).width;
-  x.fillStyle=bg;rr(x,P+24+tw+16,y+2,70,36,18);x.fill();
-  x.fillStyle=cl;x.textAlign="center";x.font="800 24px "+FF;x.fillText(String(l.length),P+24+tw+16+35,y+28);x.textAlign="left";
-  y+=64;
-  const rows=l.length?Math.ceil(l.length/2):1,ch=rows*RH+28;
-  x.fillStyle="#fff";rr(x,P,y,W-2*P,ch,22);x.fill();
-  if(!l.length){x.fillStyle="#98a2b3";x.font="600 26px "+FF;x.fillText("None",P+28,y+46)}
-  else l.forEach((e,i)=>{const cx=Math.floor(i/rows),rw=i%rows,px=P+28+cx*CW,py=y+14+rw*RH+32;
-   x.fillStyle=cl;x.font="800 26px "+FF;x.fillText(e.k.split("-").pop(),px,py);
-   x.fillStyle="#101828";x.font="600 26px "+FF;x.fillText(fit(x,e.n,CW-90),px+62,py)});
-  y+=ch+22});
- x.textAlign="center";x.fillStyle="#667085";x.font="600 22px "+FF;
- x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})+"  ·  Government College of Technology, Sargodha",W/2,H-30);
+ const TX=P+156,TW=W-P-196-24-TX;
+ x.fillStyle="#a8d8c8";x.font="700 19px "+FF;x.fillText(fit(x,"GOVERNMENT COLLEGE OF TECHNOLOGY, SARGODHA",TW),TX,94);
+ x.fillStyle="#fff";x.font="800 54px "+FF;x.fillText("Attendance Record",TX,152);
+ // class chip
+ x.font="700 22px "+FF;const cn=fit(x,cname+"  ·  "+total+" students",TW-40),cw=x.measureText(cn).width+40;
+ x.fillStyle="rgba(255,255,255,.16)";rr(x,TX,176,cw,42,21);x.fill();x.fillStyle="#fff";x.fillText(cn,TX+20,206);
+ // date tile
+ const dt=new Date(d+"T12:00:00"),TXL=W-P-196;
+ shadow(1);x.fillStyle="#fff";rr(x,TXL,56,196,196,28);x.fill();shadow(0);
+ x.save();rr(x,TXL,56,196,56,28);x.clip();x.fillStyle="#b42318";x.fillRect(TXL,56,196,56);x.restore();
+ x.fillStyle="#b42318";x.fillRect(TXL,84,196,28);
+ x.textAlign="center";x.fillStyle="#fff";x.font="800 24px "+FF;x.fillText(dt.toLocaleDateString("en-GB",{weekday:"long"}).toUpperCase().slice(0,9),TXL+98,95);
+ x.fillStyle="#101828";x.font="800 84px "+FF;x.fillText(String(dt.getDate()).padStart(2,"0"),TXL+98,194);
+ x.fillStyle="#667085";x.font="700 22px "+FF;x.fillText(dt.toLocaleDateString("en-GB",{month:"short",year:"numeric"}).toUpperCase(),TXL+98,232);
+ // summary card
+ const cy0=HH+30;shadow(1);x.fillStyle="#fff";rr(x,P,cy0,IW,290,30);x.fill();shadow(0);
+ const parts=[[present,GRN],[hf.length,BLU],[lv.length,AMB],[ab.length,RED]],ccx=P+170,ccy=cy0+145,R0=112,RW=40;
+ x.lineWidth=RW;x.lineCap="butt";x.strokeStyle="#e6ece9";x.beginPath();x.arc(ccx,ccy,R0,0,7);x.stroke();
+ let a0=-Math.PI/2;const nz=parts.filter(p=>p[0]>0).length,gap=nz>1?0.05:0;
+ if(total&&nz===1){const q=parts.filter(p=>p[0]>0)[0];x.strokeStyle=q[1];x.beginPath();x.arc(ccx,ccy,R0,0,7);x.stroke()}
+ else if(total)parts.forEach(p=>{if(!p[0])return;const a1=a0+2*Math.PI*p[0]/total;x.strokeStyle=p[1];x.beginPath();x.arc(ccx,ccy,R0,a0+gap/2,a1-gap/2);x.stroke();a0=a1});
+ const rate=total?Math.round(100*(total-ab.length)/total):0;
+ x.fillStyle="#101828";x.font="800 52px "+FF;x.fillText(rate+"%",ccx,ccy+14);x.fillStyle="#667085";x.font="700 16px "+FF;x.fillText("ATTENDANCE",ccx,ccy+42);
+ const leg=[["Present",present,GRN],["Absent",ab.length,RED],["On leave",lv.length,AMB],["Half leave",hf.length,BLU]];
+ x.textAlign="left";
+ leg.forEach((l,i)=>{const lx=P+340+(i%2)*300,ly=cy0+54+Math.floor(i/2)*112;
+  x.fillStyle=l[2];x.beginPath();x.arc(lx+9,ly+22,9,0,7);x.fill();
+  x.fillStyle="#101828";x.font="800 62px "+FF;x.fillText(String(l[1]),lx+32,ly+46);
+  const nw=x.measureText(String(l[1])).width;
+  if(total){x.fillStyle="#98a2b3";x.font="700 24px "+FF;x.fillText(Math.round(100*l[1]/total)+"%",lx+32+nw+14,ly+46)}
+  x.fillStyle="#667085";x.font="700 20px "+FF;x.fillText(l[0].toUpperCase(),lx+32,ly+76)});
+ // sections
+ let y=cy0+290+36;
+ secs.forEach((s,si)=>{const t=s[0],l=s[1],cl=s[2],bg=s[3],bd=s[4];
+  x.fillStyle=cl;rr(x,P,y+6,12,34,6);x.fill();
+  x.font="800 34px "+FF;x.fillStyle="#101828";x.fillText(t,P+30,y+36);const tw=x.measureText(t).width;
+  x.fillStyle=bg;rr(x,P+30+tw+16,y+8,64,32,16);x.fill();x.fillStyle=cl;x.textAlign="center";x.font="800 22px "+FF;x.fillText(String(l.length),P+30+tw+16+32,y+31);x.textAlign="left";
+  y+=60;
+  if(!l.length){shadow(1);x.fillStyle="#fff";rr(x,P,y,IW,92,24);x.fill();shadow(0);
+   x.fillStyle="#e3f4e8";x.beginPath();x.arc(P+56,y+46,28,0,7);x.fill();
+   x.strokeStyle=GRN;x.lineWidth=6;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(P+44,y+47);x.lineTo(P+53,y+57);x.lineTo(P+70,y+36);x.stroke();
+   x.fillStyle="#101828";x.font="800 28px "+FF;x.fillText("No absentees",P+104,y+42);x.fillStyle="#667085";x.font="600 20px "+FF;x.fillText("Everyone on the register was accounted for.",P+104,y+70)}
+  else s.items.forEach(it=>{const px=P+it.x,py=y+it.y;
+   x.fillStyle=bg;rr(x,px,py,it.w,CH,CH/2);x.fill();x.strokeStyle=bd;x.lineWidth=2;rr(x,px+1,py+1,it.w-2,CH-2,CH/2);x.stroke();
+   x.fillStyle=cl;x.beginPath();x.arc(px+10+19,py+CH/2,19,0,7);x.fill();
+   x.fillStyle="#fff";x.font="800 17px "+FF;x.textAlign="center";x.fillText(it.e.k.split("-").pop(),px+29,py+CH/2+6);x.textAlign="left";
+   x.fillStyle="#101828";x.font="700 24px "+FF;x.fillText(it.t,px+10+38+12,py+CH/2+8)});
+  y+=s.h+34});
+ // footer
+ x.fillStyle="#d3ded9";x.fillRect(P,H-62,IW,2);
+ x.fillStyle="#667085";x.font="600 19px "+FF;x.textAlign="left";
+ x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),P,H-26);
+ x.textAlign="right";x.fillText("Government College of Technology, Sargodha",W-P,H-26);
  return c}
 const CLASSNAME=()=>(CFG&&CFG.n)||"Class";
-async function makePng(r,d){try{await document.fonts.load("800 30px Manrope");await document.fonts.load("600 24px Manrope")}catch(e){}
+async function makePng(r,d){try{await document.fonts.load("800 30px Manrope");await document.fonts.load("700 24px Manrope");await document.fonts.load("600 20px Manrope")}catch(e){}
  const c=renderPng(r,d,CLASSNAME(),document.querySelector(".mono img"));
  await new Promise(ok=>c.toBlob(b=>{const url=URL.createObjectURL(b);
   if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank")}
