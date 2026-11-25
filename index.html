@@ -227,7 +227,7 @@ function drawToday(){const r=S.day;if(!r)return;
   r.noclass?h("div",{class:"lock"},ic("cal"),h("div",{class:"grow"},h("div",{class:"b"},"No class"),h("small",{},r.noclass))):null,
   h("div",{class:"lock"},ic(r.locked?"lock":"unlock"),h("div",{class:"grow"},h("div",{class:"b"},r.locked?"Locked":"Open to the CR"),h("small",{},r.locked?"The CR can only add half leaves":"Lock it when your calls are done")),
    h("button",{class:"btn sm "+(r.locked?"danger":"soft"),onclick:toggleLock},r.locked?"Unlock":"Lock day")),
-  h("button",{class:"btn ghost sm blk",style:"margin-top:14px",onclick:dayPdf},ic("down"),"Day report (PDF)")));
+  h("div",{class:"row",style:"margin-top:14px;gap:10px"},h("button",{class:"btn ghost sm grow",onclick:dayPdf},ic("down"),"PDF report"),h("button",{class:"btn ghost sm grow",onclick:dayImage},ic("image"),"Image"))));
  $("#tseg").replaceChildren(h("button",{class:S.tseg==="calls"?"on":"",onclick:()=>setTseg("calls")},"To call"+(a?" · "+a:"")),h("button",{class:S.tseg==="follow"?"on":"",onclick:()=>setTseg("follow")},"Follow-up"+(fuN()?" · "+fuN():"")));
  const calls=S.tseg==="calls";$("#calls").hidden=!calls;$("#alerts").hidden=!calls;$("#follow").hidden=calls;
  if(!calls){drawFollow();return}
@@ -259,7 +259,9 @@ function studentSheet(s){const reason=h("input",{class:"in",placeholder:"Reason 
   h("button",{class:"act",onclick:()=>{closeSheet();openProfile(s.roll)}},h("span",{class:"ai"},ic("user")),h("span",{class:"grow"},"Open profile",h("small",{class:"mu",style:"display:block;font-weight:600"},"History, calls and leaves")))))}
 async function toggleLock(){const r=S.day;if(!r.locked&&!confirm("Lock "+fdate(S.date)+"? The CR will only be able to add or remove half leaves."))return;
  try{await call("tSetLock",S.date,!r.locked);toast(r.locked?"Day unlocked":"Day locked");loadDay(false)}catch(e){toast(e.message||"Error","bad")}}
-async function dayPdf(){toast("Preparing PDF…");try{dlB64(await call("tPdf",S.date),"Absent_Report_"+S.date+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
+async function dayPdf(){toast("Preparing PDF…");try{await loadFonts();const r=await call("tLoad",S.date);savePdf(await pdfFromCanvases(dayReportPages(r,S.date,className(),document.querySelector(".logo img"))),"Absent_Report_"+S.date+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
+async function dayImage(){const r=S.day;if(!r)return;if(r.noclass){toast("No class on this date",1);return}if(r.recorded===false){toast("No attendance was recorded for this date",1);return}
+ toast("Preparing image…");try{await savePng({students:r.all,absent:r.list.map(x=>x.roll),leave:r.leaves.map(x=>x.roll),half:r.half.map(x=>x.roll)},S.date,className())}catch(e){toast(e.message||"Could not create the image","bad")}}
 
 /* ----- follow-up ----- */
 function refreshFollow(){call("tFollowUp").then(r=>{S.fu=r;if(S.view==="today")drawToday()}).catch(()=>{})}
@@ -319,7 +321,7 @@ function recMonthly(r){const rows=r.rows.filter(x=>x.n||x.l||x.h).sort((a,b)=>b.
  $("#rbody").replaceChildren(h("div",{class:"mu sm-t b",style:"margin:0 2px 12px"},r.days?r.days+" class days · "+zero+" students with no absences or leave":"No attendance recorded in this month."),
   rows.map(x=>item({av:String(x.n),avc:x.n>=5?"abs":x.n>=3?"lea":"",title:x.name,sub:x.roll,onclick:()=>openProfile(x.roll),
    extra:h("div",{class:"row",style:"margin-top:8px;gap:10px"},h("div",{class:"trk"},h("i",{class:cl(x.n),style:"width:"+(r.days?Math.min(100,100*x.n/r.days):0)+"%"})),(x.l||x.h)?h("span",{class:"bdg lea"},[x.l?x.l+" leave":"",x.h?x.h+" half":""].filter(Boolean).join(" · ")):null)})))}
-async function monthPdf(){toast("Preparing PDF…");try{dlB64(await call("tMonthPdf",S.ym),"Monthly_Summary_"+S.ym+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
+async function monthPdf(){toast("Preparing PDF…");try{await loadFonts();const r=await call("tMonth",S.ym);savePdf(await pdfFromCanvases(monthReportPages(r,S.ym,className(),document.querySelector(".logo img"))),"Monthly_Summary_"+S.ym+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
 function recDash(r){const b=$("#rbody");if(!r.latest){b.replaceChildren(empty("chart","No data yet","Dashboards appear once attendance is recorded."));return}
  const x0=r.latest,col=v=>v<75?"var(--abs)":v<90?"var(--lea)":"var(--brand)",mx=Math.max(1,...r.weekdays.map(x=>x.rate));
  b.replaceChildren(
@@ -382,11 +384,149 @@ function drawSettings(){const c=$("#v-settings"),np=h("input",{class:"in",placeh
    h("button",{class:"btn blk",style:"margin-top:10px",onclick:async()=>{try{const p=await call("tSetCrPin",np.value);toast("PIN changed");np.value="";if(S.day)S.day.crPin=p;drawSettings()}catch(e){msg.textContent=e.message||"Error"}}},"Change PIN")),
   h("div",{class:"card flat"},h("div",{class:"b"},"Alerts"),h("div",{class:"mu sm-t",style:"margin-top:6px"},"Month badge: amber from 3 absences, red from 5. “Needs attention” appears when a student is absent 3 recorded class days in a row. A leave, half leave or present day resets the count. Half leaves are not counted as absences and are not printed in the PDF reports.")))}
 
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function fit(x,t,max){if(x.measureText(t).width<=max)return t;while(t.length>1&&x.measureText(t+"…").width>max)t=t.slice(0,-1);return t+"…"}
+const FF="Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+/* Attendance image: same look as the app (light theme), laid out to read at a glance in a WhatsApp preview */
+function renderPng(r,d,cname,logo){
+ const nm={};r.students.forEach(s=>nm[s.roll]=s.name);
+ const grp=l=>(l||[]).map(k=>({k:k,n:nm[k]||k})).sort((a,b)=>a.k.localeCompare(b.k,undefined,{numeric:true}));
+ const ab=grp(r.absent),lv=grp(r.leave),hf=grp(r.half),total=r.students.length,present=Math.max(0,total-ab.length-lv.length-hf.length);
+ const W=1080,P=44,IW=W-2*P,BRAND="#0b6b57",INK="#0e1a16",MU="#62736c",LINE="#e1e8e4",S2="#eef2f0";
+ const OK="#16803c",RED="#c4342a",AMB="#a96b0b",BLU="#2459d6";
+ const secs=[["Absent",ab,RED,"#fdebe9"],["On leave",lv,AMB,"#fdf1d6"],["Half leave",hf,BLU,"#e5eeff"]].filter((s,i)=>i===0||s[1].length);
+ const IH=84,IG=12,CP=28,HD=70;
+ const secH=s=>CP+HD+(s[1].length?Math.ceil(s[1].length/2)*(IH+IG)-IG:IH)+CP;
+ let H=44+96+34+250+30;secs.forEach(s=>{H+=secH(s)+24});H+=84;
+ const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+ const shadow=on=>{x.shadowColor=on?"rgba(14,26,22,.10)":"transparent";x.shadowBlur=on?30:0;x.shadowOffsetY=on?10:0};
+ const card=(a,b,w,h)=>{shadow(1);x.fillStyle="#fff";rr(x,a,b,w,h,40);x.fill();shadow(0);x.strokeStyle=LINE;x.lineWidth=2;rr(x,a+1,b+1,w-2,h-2,40);x.stroke()};
+ x.fillStyle="#f3f6f4";x.fillRect(0,0,W,H);x.textBaseline="alphabetic";x.textAlign="left";
+ // top row: logo, title, date pill
+ shadow(1);x.fillStyle="#fff";rr(x,P,44,96,96,28);x.fill();shadow(0);
+ if(logo&&logo.naturalWidth){const k=Math.min(76/logo.naturalWidth,76/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,P+48-w/2,92-h/2,w,h)}
+ x.fillStyle=INK;x.font="800 46px "+FF;x.fillText("Attendance",P+120,92);
+ x.fillStyle=MU;x.font="600 26px "+FF;x.fillText(fit(x,cname+"  ·  "+total+" students",470),P+120,130);
+ const dt=new Date(d+"T12:00:00"),dl=dt.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+ x.font="800 28px "+FF;const pw=x.measureText(dl).width+64;
+ x.fillStyle="#fff";rr(x,W-P-pw,58,pw,68,24);x.fill();x.strokeStyle=LINE;x.lineWidth=2;rr(x,W-P-pw+1,59,pw-2,66,24);x.stroke();
+ x.fillStyle=BRAND;x.fillText(dl,W-P-pw+32,103);
+ // summary card
+ const y0=44+96+34;card(P,y0,IW,250);
+ const cx=P+32+112,cy=y0+125,R0=84,RW=34,parts=[[present,OK],[hf.length,BLU],[lv.length,AMB],[ab.length,RED]],nz=parts.filter(p=>p[0]>0).length;
+ x.lineWidth=RW;x.lineCap="butt";x.strokeStyle=S2;x.beginPath();x.arc(cx,cy,R0,0,7);x.stroke();
+ if(total&&nz===1){const q=parts.filter(p=>p[0]>0)[0];x.strokeStyle=q[1];x.beginPath();x.arc(cx,cy,R0,0,7);x.stroke()}
+ else if(total){let a0=-Math.PI/2;parts.forEach(p=>{if(!p[0])return;const a1=a0+2*Math.PI*p[0]/total;x.strokeStyle=p[1];x.beginPath();x.arc(cx,cy,R0,a0+.04,a1-.04);x.stroke();a0=a1})}
+ x.textAlign="center";x.fillStyle=INK;x.font="800 46px "+FF;x.fillText((total?Math.round(100*(total-ab.length)/total):0)+"%",cx,cy+10);x.fillStyle=MU;x.font="800 15px "+FF;x.fillText("ATTENDANCE",cx,cy+36);
+ const sx=P+32+224+36,sw=(IW-32-224-36-32-16)/2;
+ [["Present",present,OK],["Absent",ab.length,RED],["On leave",lv.length,AMB],["Half leave",hf.length,BLU]].forEach((s,i)=>{const bx=sx+(i%2)*(sw+16),by=y0+26+Math.floor(i/2)*(94+16);
+  x.fillStyle=S2;rr(x,bx,by,sw,94,28);x.fill();x.fillStyle=s[2];x.font="800 46px "+FF;x.fillText(String(s[1]),bx+sw/2,by+52);x.fillStyle=MU;x.font="800 20px "+FF;x.fillText(s[0].toUpperCase(),bx+sw/2,by+80)});
+ x.textAlign="left";
+ // sections
+ let y=y0+250+30;
+ secs.forEach(s=>{const t=s[0],l=s[1],cl=s[2],bg=s[3],h=secH(s);card(P,y,IW,h);
+  x.fillStyle=INK;x.font="800 34px "+FF;x.fillText(t,P+CP+8,y+CP+40);const tw=x.measureText(t).width;
+  x.fillStyle=bg;rr(x,P+CP+8+tw+18,y+CP+8,70,44,22);x.fill();x.fillStyle=cl;x.textAlign="center";x.font="800 24px "+FF;x.fillText(String(l.length),P+CP+8+tw+18+35,y+CP+38);x.textAlign="left";
+  const iy=y+CP+HD,colW=(IW-2*CP-IG)/2;
+  if(!l.length){x.fillStyle="#e2f5e8";rr(x,P+CP,iy,64,64,20);x.fill();x.strokeStyle=OK;x.lineWidth=6;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(P+CP+17,iy+33);x.lineTo(P+CP+28,iy+44);x.lineTo(P+CP+47,iy+21);x.stroke();
+   x.fillStyle=INK;x.font="800 28px "+FF;x.fillText("No absentees",P+CP+84,iy+30);x.fillStyle=MU;x.font="600 20px "+FF;x.fillText("Everyone on the register was accounted for.",P+CP+84,iy+58)}
+  else l.forEach((e,i)=>{const ix=P+CP+(i%2)*(colW+IG),iyy=iy+Math.floor(i/2)*(IH+IG);
+   x.fillStyle=S2;rr(x,ix,iyy,colW,IH,26);x.fill();
+   x.fillStyle=bg;rr(x,ix+10,iyy+10,64,64,20);x.fill();x.fillStyle=cl;x.textAlign="center";x.font="800 26px "+FF;x.fillText(e.k.split("-").pop(),ix+42,iyy+51);x.textAlign="left";
+   x.fillStyle=INK;x.font="800 25px "+FF;x.fillText(fit(x,e.n,colW-104),ix+88,iyy+38);x.fillStyle=MU;x.font="600 18px "+FF;x.fillText(e.k,ix+88,iyy+64)});
+  y+=h+24});
+ x.textAlign="center";x.fillStyle=MU;x.font="600 20px "+FF;
+ x.fillText("Government College of Technology, Sargodha",W/2,H-52);
+ x.fillStyle="#98a2b3";x.font="600 18px "+FF;x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),W/2,H-24);
+ return c}
+async function savePng(r,d,cname){await loadFonts();
+ const c=renderPng(r,d,cname,document.querySelector(".logo img"));
+ await new Promise(ok=>c.toBlob(b=>{const url=URL.createObjectURL(b);
+  if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank")}
+  else{const a=h("a",{href:url,download:"Attendance_"+d+".png"});document.body.append(a);a.click();a.remove()}ok()},"image/png"))}
+
+/* ===================== PDF reports: drawn like the app, saved as A4 pages ===================== */
+const PW=1240,PH=1754,PM=64,PIW=PW-2*PM,RC={BR:"#0b6b57",INK:"#0e1a16",MU:"#62736c",LN:"#e1e8e4",S2:"#eef2f0",OK:"#16803c",OKS:"#e2f5e8",RED:"#c4342a",REDS:"#fdebe9",AMB:"#a96b0b",AMBS:"#fdf1d6",MINP:75};
+function newPage(){const c=document.createElement("canvas");c.width=PW;c.height=PH;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,PW,PH);x.textBaseline="alphabetic";x.textAlign="left";return[c,x]}
+function rcard(x,a,b,w,h,r,fill,stroke){x.fillStyle=fill;rr(x,a,b,w,h,r);x.fill();if(stroke){x.strokeStyle=stroke;x.lineWidth=2;rr(x,a+1,b+1,w-2,h-2,r);x.stroke()}}
+function rbadge(x,t,rx,y,col,bg){x.font="800 21px "+FF;const w=x.measureText(t).width+30;rcard(x,rx-w,y,w,38,19,bg);x.fillStyle=col;x.textAlign="left";x.fillText(t,rx-w+15,y+27);return w}
+function ravatar(x,a,b,s,t,col,bg){rcard(x,a,b,s,s,Math.round(s*.3),bg);x.fillStyle=col;x.textAlign="center";x.font="800 "+Math.round(s*.36)+"px "+FF;x.fillText(t,a+s/2,b+s*.63);x.textAlign="left"}
+function rlogo(x,logo,a,b,s){rcard(x,a,b,s,s,Math.round(s*.29),"#fff",RC.LN);if(logo&&logo.naturalWidth){const k=Math.min(s*.76/logo.naturalWidth,s*.76/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,a+s/2-w/2,b+s/2-h/2,w,h)}}
+function bigHeader(x,logo,title,sub,pill){rlogo(x,logo,PM,56,104);x.fillStyle=RC.INK;x.font="800 48px "+FF;x.fillText(title,PM+132,108);
+ x.font="800 26px "+FF;const pw=x.measureText(pill).width+56;rcard(x,PW-PM-pw,120,pw,52,20,"#fff",RC.LN);x.fillStyle=RC.BR;x.fillText(pill,PW-PM-pw+28,155);
+ x.fillStyle=RC.MU;x.font="600 27px "+FF;x.fillText(fit(x,sub,PIW-132-pw-20),PM+132,152);return 190}
+function miniHeader(x,logo,title,pill){rlogo(x,logo,PM,44,64);x.fillStyle=RC.INK;x.font="800 30px "+FF;x.fillText(title,PM+88,84);x.fillStyle=RC.MU;x.font="700 24px "+FF;x.textAlign="right";x.fillText(pill,PW-PM,84);x.textAlign="left";x.fillStyle=RC.LN;x.fillRect(PM,118,PIW,2)}
+function summaryCard(x,y,parts,total,pct,tiles){rcard(x,PM,y,PIW,250,40,"#f6f9f8",RC.LN);
+ const cx=PM+32+112,cy=y+125,R=84,nz=parts.filter(p=>p[0]>0).length;x.lineWidth=34;x.lineCap="butt";x.strokeStyle=RC.LN;x.beginPath();x.arc(cx,cy,R,0,7);x.stroke();
+ if(total&&nz===1){x.strokeStyle=parts.filter(p=>p[0]>0)[0][1];x.beginPath();x.arc(cx,cy,R,0,7);x.stroke()}
+ else if(total){let a0=-Math.PI/2;parts.forEach(p=>{if(!p[0])return;const a1=a0+2*Math.PI*p[0]/total;x.strokeStyle=p[1];x.beginPath();x.arc(cx,cy,R,a0+.04,a1-.04);x.stroke();a0=a1})}
+ x.textAlign="center";x.fillStyle=RC.INK;x.font="800 46px "+FF;x.fillText(pct==null?"–":pct+"%",cx,cy+10);x.fillStyle=RC.MU;x.font="800 15px "+FF;x.fillText("ATTENDANCE",cx,cy+36);
+ const sx=PM+32+224+36,sw=(PIW-32-224-36-32-16)/2;
+ tiles.forEach((t,i)=>{const bx=sx+(i%2)*(sw+16),by=y+26+Math.floor(i/2)*110;rcard(x,bx,by,sw,94,28,"#fff",RC.LN);x.fillStyle=t[2]||RC.INK;x.font="800 46px "+FF;x.fillText(String(t[1]),bx+sw/2,by+52);x.fillStyle=RC.MU;x.font="800 20px "+FF;x.fillText(t[0].toUpperCase(),bx+sw/2,by+80)});x.textAlign="left"}
+function heading(t,n,col,bg){return{h:62,gap:6,keep:true,draw(x,y){x.fillStyle=RC.INK;x.font="800 34px "+FF;x.textAlign="left";x.fillText(t,PM+4,y+42);const w=x.measureText(t).width;rcard(x,PM+4+w+16,y+6,64,42,21,bg);x.fillStyle=col;x.textAlign="center";x.font="800 24px "+FF;x.fillText(String(n),PM+4+w+48,y+36);x.textAlign="left"}}}
+function pageFooter(x,i,n,cname,last){if(last){x.fillStyle=RC.MU;x.fillRect(PW-PM-400,PH-190,400,2);x.font="700 22px "+FF;x.textAlign="right";x.fillText("Incharge signature",PW-PM,PH-156);x.textAlign="left"}
+ x.fillStyle=RC.LN;x.fillRect(PM,PH-108,PIW,2);x.fillStyle=RC.MU;x.font="700 21px "+FF;x.fillText("Government College of Technology, Sargodha  ·  "+cname,PM,PH-68);
+ x.textAlign="right";x.fillText("Page "+i+" of "+n,PW-PM,PH-68);x.textAlign="left";x.fillStyle="#98a2b3";x.font="600 18px "+FF;x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),PM,PH-38)}
+function paginate(blocks,firstTop,otherTop,bottom){const pages=[[]];let y=firstTop,pi=0;
+ blocks.forEach((b,i)=>{const need=b.h+(b.keep&&blocks[i+1]?blocks[i+1].h:0);if(y+need>bottom&&pages[pi].length){pages.push([]);pi++;y=otherTop}pages[pi].push({b:b,y:y});y+=b.h+(b.gap||0)});return pages}
+function buildReport(o,logo){const sig=80,pages=paginate(o.blocks,190+34+250+30,150,PH-130);
+ const lastY=pages[pages.length-1].reduce((m,p)=>Math.max(m,p.y+p.b.h),0);if(lastY>PH-130-sig){pages.push([])}
+ return pages.map((pg,i)=>{const[c,x]=newPage();
+  if(i===0){bigHeader(x,logo,o.title,o.sub,o.pill);summaryCard(x,224,o.parts,o.total,o.pct,o.tiles)}else miniHeader(x,logo,o.title,o.pill);
+  pg.forEach(p=>p.b.draw(x,p.y));pageFooter(x,i+1,pages.length,o.cname,i===pages.length-1);return c})}
+const oc=s=>s==="Informed"?[RC.OK,RC.OKS]:s?[RC.AMB,RC.AMBS]:[RC.RED,RC.REDS];
+function absBlock(s){const hr=!!(s.r&&String(s.r).trim()),hh=hr?170:118;return{h:hh,gap:14,draw(x,y){rcard(x,PM,y,PIW,hh,32,"#fff",RC.LN);ravatar(x,PM+22,y+22,72,tail(s.roll),RC.RED,RC.REDS);
+  x.fillStyle=RC.INK;x.font="800 31px "+FF;x.fillText(fit(x,s.name,450),PM+120,y+46);x.fillStyle=RC.MU;x.font="600 22px "+FF;x.fillText(fit(x,s.roll+"  ·  S/O "+s.father,450),PM+120,y+77);x.fillText(s.phone,PM+120,y+105);
+  const rx=PM+PIW-26,o=oc(s.o);rbadge(x,s.o||"Not called",rx,y+16,o[0],o[1]);
+  const m=s.m>=5?[RC.RED,RC.REDS]:s.m>=3?[RC.AMB,RC.AMBS]:[RC.MU,RC.S2];let bw=rbadge(x,s.m+(s.m===1?" absence":" absences")+" this month",rx,y+62,m[0],m[1]);
+  if(s.s>=2){const k=s.s>=3?[RC.RED,RC.REDS]:[RC.AMB,RC.AMBS];rbadge(x,s.s+" days in a row",rx-bw-10,y+62,k[0],k[1])}
+  if(hr){x.fillStyle=RC.S2;rr(x,PM+20,y+hh-58,PIW-40,42,16);x.fill();x.fillStyle=RC.INK;x.font="600 22px "+FF;x.fillText(fit(x,"Remark:  "+String(s.r).trim(),PIW-80),PM+36,y+hh-29)}}}}
+function leaveBlock(s){return{h:96,gap:12,draw(x,y){rcard(x,PM,y,PIW,96,30,"#fff",RC.LN);ravatar(x,PM+20,y+16,64,tail(s.roll),RC.AMB,RC.AMBS);x.fillStyle=RC.INK;x.font="800 28px "+FF;x.fillText(fit(x,s.name,520),PM+104,y+42);x.fillStyle=RC.MU;x.font="600 21px "+FF;x.fillText(fit(x,s.roll+"  ·  "+(s.reason||"Approved leave"),PIW-150),PM+104,y+72)}}}
+function emptyBlock(t,sub){return{h:116,gap:14,draw(x,y){rcard(x,PM,y,PIW,116,32,"#fff",RC.LN);rcard(x,PM+24,y+26,64,64,20,RC.OKS);x.strokeStyle=RC.OK;x.lineWidth=6;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(PM+41,y+59);x.lineTo(PM+52,y+70);x.lineTo(PM+71,y+47);x.stroke();
+  x.fillStyle=RC.INK;x.font="800 30px "+FF;x.fillText(t,PM+110,y+56);x.fillStyle=RC.MU;x.font="600 22px "+FF;x.fillText(sub,PM+110,y+88)}}}
+/* daily report for the incharge. Half leaves are not shown here and count as present. */
+function dayReportPages(r,d,cname,logo){const ab=r.list,lv=r.leaves,total=r.total,present=Math.max(0,total-ab.length-lv.length),called=ab.filter(s=>s.o).length;
+ const dl=new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+ const blocks=[heading("Absentees",ab.length,RC.RED,RC.REDS)].concat(ab.length?ab.map(absBlock):[emptyBlock("No absentees","Everyone on the register was accounted for.")]);
+ if(lv.length)blocks.push(heading("On leave",lv.length,RC.AMB,RC.AMBS),...lv.map(leaveBlock));
+ return buildReport({title:"Daily Absence Report",sub:cname+"  ·  "+total+" students",pill:dl,cname:cname,total:total,pct:total?Math.round(100*(total-ab.length)/total):null,
+  parts:[[present,RC.OK],[lv.length,RC.AMB],[ab.length,RC.RED]],tiles:[["Present",present,RC.OK],["Absent",ab.length,RC.RED],["On leave",lv.length,RC.AMB],["Reached",called+" / "+ab.length]],blocks:blocks},logo)}
+/* monthly summary: every student, most absences first */
+function monthReportPages(r,ym,cname,logo){const rows=r.rows.slice().sort((a,b)=>b.n-a.n||natc(a.roll,b.roll)),days=r.days,total=rows.length,sumA=rows.reduce((q,x)=>q+x.n,0);
+ const pctOf=x=>days?Math.round(100*(days-x.n)/days):null,low=days?rows.filter(x=>pctOf(x)<RC.MINP).length:0,avg=days&&total?Math.round(100*(days*total-sumA)/(days*total)):null;
+ const ml=new Date(ym+"-15T12:00:00").toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+ const head={h:44,gap:4,draw(x,y){x.fillStyle=RC.MU;x.font="800 19px "+FF;x.textAlign="left";x.fillText("STUDENT",PM+26,y+30);x.textAlign="center";x.fillText("ABSENT",PM+600,y+30);x.fillText("LEAVE",PM+720,y+30);x.textAlign="left";x.fillText("ATTENDANCE",PM+790,y+30);x.textAlign="left"}};
+ const rowB=x0=>({h:64,gap:6,draw(x,y){rcard(x,PM,y,PIW,64,24,"#fff",RC.LN);const p=pctOf(x0),col=p==null?RC.MU:p<RC.MINP?RC.RED:p<90?RC.AMB:RC.OK,bg=p==null?RC.S2:p<RC.MINP?RC.REDS:p<90?RC.AMBS:RC.OKS;
+  ravatar(x,PM+14,y+8,48,tail(x0.roll),x0.n>=3?RC.RED:RC.BR,x0.n>=3?RC.REDS:"#dff2ea");x.fillStyle=RC.INK;x.font="800 25px "+FF;x.fillText(fit(x,x0.name,440),PM+80,y+30);x.fillStyle=RC.MU;x.font="600 18px "+FF;x.fillText(x0.roll,PM+80,y+52);
+  x.textAlign="center";x.font="800 29px "+FF;x.fillStyle=x0.n>=3?RC.RED:x0.n?RC.INK:"#98a2b3";x.fillText(String(x0.n),PM+600,y+42);x.fillStyle=x0.l?RC.AMB:"#98a2b3";x.fillText(String(x0.l),PM+720,y+42);x.textAlign="left";
+  x.fillStyle=RC.S2;rr(x,PM+790,y+25,170,14,7);x.fill();if(p){x.fillStyle=col;rr(x,PM+790,y+25,Math.max(14,170*p/100),14,7);x.fill()}
+  x.fillStyle=col;x.font="800 24px "+FF;x.textAlign="right";x.fillText(p==null?"–":p+"%",PM+PIW-24,y+42);x.textAlign="left"}});
+ const blocks=[heading("Students",total,RC.BR,"#dff2ea"),head].concat(rows.map(rowB));
+ return buildReport({title:"Monthly Attendance Summary",sub:cname+"  ·  "+days+" class days recorded",pill:ml,cname:cname,total:days*total,pct:avg,
+  parts:[[days*total-sumA,RC.OK],[sumA,RC.RED]],tiles:[["Class days",days],["Students",total],["Below "+RC.MINP+"%",low,low?RC.RED:RC.INK],["Absent days",sumA,sumA?RC.RED:RC.INK]],blocks:blocks},logo)}
+/* minimal PDF writer: one JPEG page image per A4 page */
+async function pdfFromCanvases(cs){const enc=new TextEncoder(),parts=[],offs=[];let off=0;
+ const push=b=>{const u=typeof b==="string"?enc.encode(b):b;parts.push(u);off+=u.length};
+ const jpg=await Promise.all(cs.map(c=>new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(a=>ok(new Uint8Array(a))),"image/jpeg",.92)))),n=cs.length;
+ push("%PDF-1.4\n");const obj=(id,body)=>{offs[id]=off;push(id+" 0 obj\n"+body+"\nendobj\n")};
+ obj(1,"<< /Type /Catalog /Pages 2 0 R >>");obj(2,"<< /Type /Pages /Count "+n+" /Kids ["+cs.map((_,i)=>(3+3*i)+" 0 R").join(" ")+"] >>");
+ cs.forEach((c,i)=>{const p=3+3*i,ct=p+1,im=p+2,cont="q 595.28 0 0 841.89 0 0 cm /Im0 Do Q";
+  obj(p,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 "+im+" 0 R >> >> /Contents "+ct+" 0 R >>");
+  obj(ct,"<< /Length "+cont.length+" >>\nstream\n"+cont+"\nendstream");
+  offs[im]=off;push(im+" 0 obj\n<< /Type /XObject /Subtype /Image /Width "+c.width+" /Height "+c.height+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpg[i].length+" >>\nstream\n");push(jpg[i]);push("\nendstream\nendobj\n")});
+ const N=3+3*n,xr=off;let t="xref\n0 "+N+"\n0000000000 65535 f \n";for(let i=1;i<N;i++)t+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+ push(t+"trailer\n<< /Size "+N+" /Root 1 0 R >>\nstartxref\n"+xr+"\n%%EOF");
+ const out=new Uint8Array(off);let q=0;parts.forEach(u=>{out.set(u,q);q+=u.length});return out}
+function savePdf(bytes,name){const url=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
+ if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank");return}const a=h("a",{href:url,download:name});document.body.append(a);a.click();a.remove()}
+const loadFonts=async()=>{try{await document.fonts.load("800 30px Manrope");await document.fonts.load("700 24px Manrope");await document.fonts.load("600 20px Manrope")}catch(e){}};
+
 const PWA=true,PRE={};
 let CFG;try{CFG=JSON.parse(localStorage.getItem("gct_cfg")||"")}catch(e){}
 if(!CFG||!Array.isArray(CFG.list))CFG={list:[],cur:0};
 const saveCfg=()=>{try{localStorage.setItem("gct_cfg",JSON.stringify(CFG))}catch(e){}};
 const active_=()=>CFG.list[CFG.cur];
+const className=()=>(active_()||{}).n||"Class";
 const ckey=()=>{const c=active_();return c?c.u.slice(-24):""};
 function addClass(n,u,k){u=(u||"").trim();k=(k||"").trim();n=(n||"").trim()||"Class";
  if(!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(u))throw new Error("The web app link must start with https://script.google.com and end with /exec");
