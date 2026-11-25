@@ -328,11 +328,20 @@ function renderPng(r,d,cname,logo){
  x.fillText("Government College of Technology, Sargodha",W/2,H-52);
  x.fillStyle="#98a2b3";x.font="600 18px "+FF;x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),W/2,H-24);
  return c}
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+/* Android and desktop download straight away. iPhone blocks downloads that start after a delay, so it gets a "ready" sheet whose buttons run on a fresh tap. */
+function deliver(blob,name){const type=blob.type,url=URL.createObjectURL(blob);
+ if(!isIOS()){const a=h("a",{href:url,download:name});document.body.append(a);a.click();a.remove();return}
+ const file=new File([blob],name,{type:type}),canShare=!!(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))),img=type.indexOf("image/")===0;
+ sheet("Your file is ready",h("div",{},
+  img?h("img",{src:url,alt:name,style:"width:100%;border-radius:16px;border:1px solid var(--line);margin-bottom:14px"}):h("div",{class:"item"},h("div",{class:"av"},ic("down")),h("div",{class:"tx"},h("div",{class:"nm"},name),h("small",{},"PDF · ready to save"))),
+  canShare?h("button",{class:"btn blk",onclick:async()=>{try{await navigator.share({files:[file],title:name})}catch(e){if(!e||e.name!=="AbortError")toast("Could not open the share sheet","bad")}}},ic("down"),"Share or save"):null,
+  navigator.standalone?null:h("button",{class:"btn ghost blk",style:"margin-top:10px",onclick:()=>{window.open(url,"_blank")}},"Open"),
+  h("div",{class:"mu sm-t",style:"margin:14px 0 4px;text-align:center"},img?"You can also press and hold the picture, then choose Save to Photos.":"In the share sheet, choose Save to Files."),
+  h("button",{class:"btn soft blk",style:"margin-top:8px",onclick:closeSheet},"Done")))}
 async function savePng(r,d,cname){await loadFonts();
  const c=renderPng(r,d,cname,document.querySelector(".logo img"));
- await new Promise(ok=>c.toBlob(b=>{const url=URL.createObjectURL(b);
-  if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank")}
-  else{const a=h("a",{href:url,download:"Attendance_"+d+".png"});document.body.append(a);a.click();a.remove()}ok()},"image/png"))}
+ await new Promise(ok=>c.toBlob(b=>{deliver(b,"Attendance_"+d+".png");ok()},"image/png"))}
 
 async function makePng(r,d){await savePng(r,d,cname())}
 async function makeImage(d){toast("Preparing image…");
