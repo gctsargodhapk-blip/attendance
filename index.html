@@ -439,11 +439,20 @@ function renderPng(r,d,cname,logo){
  x.fillText("Government College of Technology, Sargodha",W/2,H-52);
  x.fillStyle="#98a2b3";x.font="600 18px "+FF;x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),W/2,H-24);
  return c}
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+/* Android and desktop download straight away. iPhone blocks downloads that start after a delay, so it gets a "ready" sheet whose buttons run on a fresh tap. */
+function deliver(blob,name){const type=blob.type,url=URL.createObjectURL(blob);
+ if(!isIOS()){const a=h("a",{href:url,download:name});document.body.append(a);a.click();a.remove();return}
+ const file=new File([blob],name,{type:type}),canShare=!!(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))),img=type.indexOf("image/")===0;
+ sheet("Your file is ready",h("div",{},
+  img?h("img",{src:url,alt:name,style:"width:100%;border-radius:16px;border:1px solid var(--line);margin-bottom:14px"}):h("div",{class:"item"},h("div",{class:"av"},ic("down")),h("div",{class:"tx"},h("div",{class:"nm"},name),h("small",{},"PDF · ready to save"))),
+  canShare?h("button",{class:"btn blk",onclick:async()=>{try{await navigator.share({files:[file],title:name})}catch(e){if(!e||e.name!=="AbortError")toast("Could not open the share sheet","bad")}}},ic("down"),"Share or save"):null,
+  navigator.standalone?null:h("button",{class:"btn ghost blk",style:"margin-top:10px",onclick:()=>{window.open(url,"_blank")}},"Open"),
+  h("div",{class:"mu sm-t",style:"margin:14px 0 4px;text-align:center"},img?"You can also press and hold the picture, then choose Save to Photos.":"In the share sheet, choose Save to Files."),
+  h("button",{class:"btn soft blk",style:"margin-top:8px",onclick:closeSheet},"Done")))}
 async function savePng(r,d,cname){await loadFonts();
  const c=renderPng(r,d,cname,document.querySelector(".logo img"));
- await new Promise(ok=>c.toBlob(b=>{const url=URL.createObjectURL(b);
-  if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank")}
-  else{const a=h("a",{href:url,download:"Attendance_"+d+".png"});document.body.append(a);a.click();a.remove()}ok()},"image/png"))}
+ await new Promise(ok=>c.toBlob(b=>{deliver(b,"Attendance_"+d+".png");ok()},"image/png"))}
 
 /* ===================== PDF reports: drawn like the app, saved as A4 pages ===================== */
 const PW=1240,PH=1754,PM=64,PIW=PW-2*PM,RC={BR:"#0b6b57",INK:"#0e1a16",MU:"#62736c",LN:"#e1e8e4",S2:"#eef2f0",OK:"#16803c",OKS:"#e2f5e8",RED:"#c4342a",REDS:"#fdebe9",AMB:"#a96b0b",AMBS:"#fdf1d6",MINP:75};
@@ -517,8 +526,7 @@ async function pdfFromCanvases(cs){const enc=new TextEncoder(),parts=[],offs=[];
  const N=3+3*n,xr=off;let t="xref\n0 "+N+"\n0000000000 65535 f \n";for(let i=1;i<N;i++)t+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
  push(t+"trailer\n<< /Size "+N+" /Root 1 0 R >>\nstartxref\n"+xr+"\n%%EOF");
  const out=new Uint8Array(off);let q=0;parts.forEach(u=>{out.set(u,q);q+=u.length});return out}
-function savePdf(bytes,name){const url=URL.createObjectURL(new Blob([bytes],{type:"application/pdf"}));
- if(/iphone|ipad/i.test(navigator.userAgent)){window.open(url,"_blank");return}const a=h("a",{href:url,download:name});document.body.append(a);a.click();a.remove()}
+function savePdf(bytes,name){deliver(new Blob([bytes],{type:"application/pdf"}),name)}
 const loadFonts=async()=>{try{await document.fonts.load("800 30px Manrope");await document.fonts.load("700 24px Manrope");await document.fonts.load("600 20px Manrope")}catch(e){}};
 
 const PWA=true,PRE={};
