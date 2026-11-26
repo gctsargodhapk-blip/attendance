@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="CR Attendance"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f3f6f4" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0a110f" media="(prefers-color-scheme: dark)"><title>CR Attendance</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet"><style>:root{color-scheme:light dark;--bg:#f3f6f4;--surface:#fff;--s2:#eef2f0;--ink:#0e1a16;--mu:#62736c;--line:#e1e8e4;--brand:#0b6b57;--bink:#fff;--bsoft:#dff2ea;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Attendance"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f3f6f4" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0a110f" media="(prefers-color-scheme: dark)"><title>Attendance</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet"><style>:root{color-scheme:light dark;--bg:#f3f6f4;--surface:#fff;--s2:#eef2f0;--ink:#0e1a16;--mu:#62736c;--line:#e1e8e4;--brand:#0b6b57;--bink:#fff;--bsoft:#dff2ea;
 --abs:#c4342a;--abss:#fdebe9;--lea:#a96b0b;--leas:#fdf1d6;--half:#2459d6;--halfs:#e5eeff;--ok:#16803c;--oks:#e2f5e8;
 --sh:0 1px 2px rgba(14,26,22,.05),0 10px 28px rgba(14,26,22,.07);--r:20px}
 @media (prefers-color-scheme:dark){:root{--bg:#0a110f;--surface:#121b18;--s2:#1a2622;--ink:#eaf3ef;--mu:#8da39a;--line:#233630;--brand:#3ddba6;--bink:#032118;--bsoft:#123329;
@@ -79,20 +79,6 @@ h2,h3{margin:0}[hidden]{display:none!important}
 .cd{aspect-ratio:1;border-radius:14px;font-weight:700;display:grid;place-items:center;position:relative;border:1.5px solid transparent;text-align:center}
 .cd.rec{background:var(--bsoft)}.cd.rec::after,.cd.nc::after{content:"";position:absolute;bottom:5px;left:50%;margin-left:-2.5px;width:5px;height:5px;border-radius:50%;background:var(--brand)}.cd.nc::after{background:var(--lea)}
 .cd.nc{background:var(--leas)}.cd.tod{border-color:var(--brand)}.cd.sel{background:var(--brand);color:var(--bink)}.cd.sel::after{background:var(--bink)}
-.app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
-.cbar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -12px 32px rgba(0,0,0,.08)}
-.cbar>div{display:flex;max-width:640px;margin:0 auto;align-items:center;justify-content:space-between;gap:14px}
-.cs{display:flex;align-items:baseline;gap:6px;font-weight:700;color:var(--mu);flex-wrap:wrap}.cs b{font-size:26px;color:var(--ink);font-weight:800;line-height:1}.cs i{width:1px;height:18px;background:var(--line);margin:0 6px;align-self:center}
-.cstate{display:block;font-size:12px;font-weight:800;color:var(--mu);width:100%}.cstate.dirty{color:var(--lea)}.cstate.ok{color:var(--ok)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
-.tile{position:relative;aspect-ratio:1/1.08;border-radius:20px;border:1.5px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:transform .12s,background .15s,border-color .15s,color .15s;text-align:center;padding:4px;width:100%}
-.tile:active{transform:scale(.93)}.tile b{font-size:26px;font-weight:800;line-height:1;letter-spacing:-.02em}.tile small{font-size:11.5px;color:var(--mu);font-weight:700;max-width:92%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tile.a{background:var(--abs);border-color:var(--abs);color:#fff}.tile.h{background:var(--half);border-color:var(--half);color:#fff}.tile.l{background:var(--leas);border-color:var(--lea);color:var(--lea)}
-.tile.a small,.tile.h small{color:rgba(255,255,255,.88)}.tile.l small{color:var(--lea)}
-.tile em{position:absolute;top:6px;right:10px;font-style:normal;font-weight:800;font-size:15px}.tile .i{position:absolute;top:8px;right:8px;width:14px;height:14px}
-.rowc{display:flex;align-items:center;gap:12px;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:11px 12px;margin-bottom:8px;transition:transform .12s,background .15s}.rowc:active{transform:scale(.98)}
-.rowc .bdg{margin-left:auto}.rowc.a{background:var(--abss);border-color:transparent}.rowc.h{background:var(--halfs);border-color:transparent}.rowc.l{background:var(--leas);border-color:transparent}
-.big-ok{width:72px;height:72px;border-radius:50%;background:var(--oks);color:var(--ok);display:grid;place-items:center;margin:6px auto 14px}.big-ok .i{width:34px;height:34px;stroke-width:2.6}
 </style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
 <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
@@ -125,17 +111,21 @@ h2,h3{margin:0}[hidden]{display:none!important}
 <div id="ld"></div>
 <div class="app">
 <header class="top">
- <div class="logo"><img src="../logo.png" alt=""></div>
- <div class="tt"><div class="ttl">Attendance</div><div class="sub" id="sub">Class representative</div></div>
- <button class="ib" id="png" hidden aria-label="Download attendance image"><svg class="i"><use href="#i-image"/></svg></button>
- <button class="ib" id="menu" hidden aria-label="Menu"><svg class="i"><use href="#i-more"/></svg></button>
+ <button class="ib" id="back" hidden aria-label="Back"><svg class="i"><use href="#i-left"/></svg></button>
+ <div class="logo" id="logo"><img src="logo.png" alt=""></div>
+ <div class="tt"><div class="ttl" id="ttl">Today</div><div class="sub" id="sub"></div></div>
+ <button class="ib" id="rfr" aria-label="Refresh"><svg class="i"><use href="#i-refresh"/></svg></button>
 </header>
-<main>
- <section id="v-conn" hidden></section>
- <section id="v-day" hidden><div class="dbar" id="dbar"></div><div id="banner"></div><div id="ctl"></div><div id="body"></div></section>
+<div class="dbar" id="dbar"></div>
+<main id="main">
+ <section id="v-today"><div id="hero"></div><div class="seg" id="tseg"></div><div id="alerts"></div><div id="calls"></div><div id="follow" hidden></div></section>
+ <section id="v-leaves" hidden><div id="lv"></div></section>
+ <section id="v-records" hidden><div class="seg" id="rseg"></div><div id="rctl"></div><div id="rbody"></div></section>
+ <section id="v-more" hidden></section><section id="v-students" hidden></section><section id="v-profile" hidden></section>
+ <section id="v-noclass" hidden></section><section id="v-settings" hidden></section><section id="v-classes" hidden></section><section id="v-setup" hidden></section>
 </main>
 </div>
-<div class="cbar" id="cbar" hidden></div>
+<nav class="tabs" id="tabs"><div></div></nav>
 <div class="ov" id="ov"><div class="sheet" id="sh"></div></div>
 <div class="toast" id="toast"></div>
 <script>/* ===================== helpers ===================== */
@@ -190,89 +180,210 @@ function calSheet(o){let y=+o.value.slice(0,4),m=+o.value.slice(5,7)-1;const bod
    h("button",{class:"btn soft blk",style:"margin-top:14px",onclick:()=>{closeSheet();o.onPick(TODAY)}},"Jump to today"))};
  draw();sheet("Pick a day",body)}
 
+/* ===================== state ===================== */
+const OUT=[["Informed","ok"],["No answer","w"],["Wrong number","x"],["Switched off","n"]];
+const S={date:TODAY,day:null,fu:null,view:"today",prev:"today",tseg:"calls",rmode:"d",ym:TODAY.slice(0,7),students:[],AT:3};
 
-const PWA=true,DEFAULT_CLASS="Class",PRE={};let CFG=null;
-try{CFG=JSON.parse(localStorage.getItem("gct_cr")||"null")}catch(e){}
-const saveCfg=()=>{try{CFG?localStorage.setItem("gct_cr",JSON.stringify(CFG)):localStorage.removeItem("gct_cr")}catch(e){}};
-async function api(fn,args){let res;
- try{res=await fetch(CFG.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:fn,args:args}),redirect:"follow"})}
- catch(e){throw new Error("No connection. Check your internet and try again.")}
- let j;try{j=await res.json()}catch(e){throw new Error("Server error. Ask your teacher to check the app link.")}
- if(!j.ok)throw new Error(j.error);return j.data}
-const ready=()=>!!(CFG&&CFG.u&&CFG.pin);
+/* ===================== navigation ===================== */
+const TABS=[["today","home","Today"],["leaves","leaf","Leaves"],["records","chart","Records"],["more","grid","More"]];
+const TITLES={today:"Today",leaves:"Leaves",records:"Records",more:"More",students:"Students",profile:"Profile",noclass:"No-class days",settings:"CR PIN & alerts",classes:"Classes",setup:"Connect a class"};
+const MAIN=["today","leaves","records","more"],PARENT={students:"more",noclass:"more",settings:"more",classes:"more"};
+$("#tabs").firstElementChild.replaceChildren(...TABS.map(t=>h("button",{class:"tab",id:"tab-"+t[0],onclick:()=>go(t[0])},ic(t[1]),t[2])));
+function go(v){if(v!=="profile"&&v!=="setup")S.prev=v;S.view=v;
+ document.querySelectorAll("main>section").forEach(s=>s.hidden=s.id!=="v-"+v);
+ const main=MAIN.includes(v)||(v==="setup"&&!active_());
+ $("#dbar").hidden=!(v==="today"||v==="leaves");$("#back").hidden=main;$("#logo").hidden=!main;$("#ttl").textContent=TITLES[v];
+ const act=MAIN.includes(v)?v:(PARENT[v]||(MAIN.includes(S.prev)?S.prev:PARENT[S.prev]||"today"));
+ TABS.forEach(t=>$("#tab-"+t[0]).classList.toggle("on",t[0]===act));
+ $("#tabs").hidden=v==="setup"&&!active_();drawSub();
+ if(v==="records")drawRecords();else if(v==="more")drawMore();else if(v==="students")loadStudents();else if(v==="noclass")drawNoclass();else if(v==="settings")drawSettings();else if(v==="classes")drawClasses();else if(v==="setup")drawSetup();
+ window.scrollTo(0,0)}
+$("#back").onclick=()=>go(S.view==="profile"?S.prev:(PARENT[S.view]||"today"));
+$("#rfr").onclick=()=>{buzz();if(S.view==="today"||S.view==="leaves")loadDay(false);else if(S.view==="records")loadRecords();else if(S.view==="students")loadStudents();else go(S.view)};
+function drawSub(){const s=$("#sub");s.replaceChildren(subNode())}
 
-/* ===================== CR state ===================== */
-const C={pin:"",date:TODAY,students:[],A:new Set(),H:new Set(),Lv:new Set(),NC:"",LK:false,rec:false,view:"grid",q:"",dirty:false};
-try{C.view=localStorage.getItem("gct_cr_view")||"grid"}catch(e){}
-const cname=()=>(CFG&&CFG.n)||DEFAULT_CLASS;
-function authFail(e){if(/wrong pin/i.test((e&&e.message)||"")){showConn("The class PIN has changed. Enter the new PIN.");return true}return false}
+/* ===================== date bar ===================== */
+function drawDbar(){$("#dbar").replaceChildren(
+ h("button",{class:"ib",onclick:()=>setDate(addDays(S.date,-1)),"aria-label":"Previous day"},ic("left")),
+ h("button",{class:"dtl",onclick:pickDate},ic("cal"),S.date===TODAY?"Today · "+fdate(S.date,{day:"numeric",month:"short"}):fdate(S.date)),
+ h("button",{class:"ib",onclick:()=>setDate(addDays(S.date,1)),"aria-label":"Next day"},ic("right")))}
+function setDate(d){S.date=d;drawDbar();loadDay(true)}
+function pickDate(){const mk={};((S.day&&S.day.dates)||[]).forEach(d=>mk[d]="rec");((S.day&&S.day.holidays)||[]).forEach(x=>mk[x.d]="nc");calSheet({value:S.date,marks:mk,onPick:setDate})}
 
-/* ===================== connect ===================== */
-function showConn(msg){const pin=h("input",{class:"in",type:"password",inputmode:"numeric",autocomplete:"off",placeholder:"Class PIN"}),err=h("div",{class:"err"},msg||"");
- const u=PWA?h("input",{class:"in",type:"url",placeholder:"https://script.google.com/…/exec",value:(CFG&&CFG.u)||PRE.u||""}):null,n=PWA?h("input",{class:"in",placeholder:"e.g. Third Year C",value:(CFG&&CFG.n)||PRE.c||""}):null;
- $("#v-day").hidden=true;$("#cbar").hidden=true;$("#png").hidden=true;$("#menu").hidden=true;$("#v-conn").hidden=false;$("#sub").textContent="Class representative";
- $("#v-conn").replaceChildren(h("div",{class:"card",style:"margin-top:12px"},h("div",{style:"font-size:22px;font-weight:800;letter-spacing:-.02em"},"Connect your class"),
-  h("div",{class:"mu",style:"margin:6px 0 18px"},PWA?"Enter these once. They stay on this phone.":"Enter the class PIN your teacher gave you."),
-  PWA?[fld("Web app link",u),fld("Class name",n)]:null,fld("Class PIN",pin),err,
-  h("button",{class:"btn blk",onclick:async ev=>{const b=ev.currentTarget;err.textContent="";const U=u?u.value.trim():"",P=pin.value.trim(),N=n?n.value.trim():"";
-   if(PWA&&!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(U)){err.textContent="The link must start with https://script.google.com and end with /exec";return}
-   if(!P){err.textContent="Enter the class PIN";return}
-   b.disabled=true;const prev=CFG;CFG={u:U,pin:P,n:N||DEFAULT_CLASS};
-   try{await call("crLoad",P,TODAY);saveCfg();startDay()}catch(x){CFG=prev;err.textContent=x.message||"Could not connect"}b.disabled=false}},"Connect")))}
-function startDay(){C.pin=CFG.pin;C.q="";$("#v-conn").hidden=true;$("#v-day").hidden=false;$("#png").hidden=false;$("#menu").hidden=false;$("#sub").textContent="Class representative · "+cname();drawDbar();loadDay()}
+/* ===================== today ===================== */
+async function loadDay(useCache){const d=S.date;
+ if(!S.day||S.day._d!==d){$("#hero").replaceChildren(...skel(1,210));$("#calls").replaceChildren(...skel(2,170));$("#follow").hidden=true}
+ const apply=(r)=>{if(d!==S.date)return;r._d=d;S.day=r;S.AT=r.alertAt;drawToday();drawLeaves();if(S.view==="settings")drawSettings()};
+ try{if(useCache)await swr("tLoad",[d],apply);else apply(await call("tLoad",d));if(useCache)refreshFollow()}
+ catch(e){if(S.day&&S.day._d===d)toast(e.message||"Could not load","bad");else{$("#hero").replaceChildren();$("#calls").replaceChildren(errBox(e))}}}
+function fuN(){return S.fu?S.fu.retry.length+S.fu.wrong.length:0}
+function setTseg(m){S.tseg=m;drawToday();if(m==="follow")loadFollow()}
+function drawToday(){const r=S.day;if(!r)return;
+ const a=r.list.length,l=r.leaves.length,hf=r.half.length,t=r.total,p=Math.max(0,t-a-l-hf),rate=t?Math.round(100*(t-a)/t):0;
+ let acc=0;const stops=[];[[p,"var(--ok)"],[hf,"var(--half)"],[l,"var(--lea)"],[a,"var(--abs)"]].forEach(([n,c])=>{if(!n||!t)return;const s=acc;acc+=100*n/t;stops.push(c+" "+s+"% "+acc+"%")});
+ $("#hero").replaceChildren(h("div",{class:"card"},
+  h("div",{class:"hero"},h("div",{class:"ring",style:"background:"+(stops.length?"conic-gradient("+stops.join(",")+")":"var(--s2)")},h("b",{},rate+"%")),
+   h("div",{class:"stats"},stat(p,"Present","var(--ok)"),stat(a,"Absent","var(--abs)"),stat(l,"On leave","var(--lea)"),stat(hf,"Half leave","var(--half)"))),
+  r.noclass?h("div",{class:"lock"},ic("cal"),h("div",{class:"grow"},h("div",{class:"b"},"No class"),h("small",{},r.noclass))):null,
+  h("div",{class:"lock"},ic(r.locked?"lock":"unlock"),h("div",{class:"grow"},h("div",{class:"b"},r.locked?"Locked":"Open to the CR"),h("small",{},r.locked?"The CR can only add half leaves":"Lock it when your calls are done")),
+   h("button",{class:"btn sm "+(r.locked?"danger":"soft"),onclick:toggleLock},r.locked?"Unlock":"Lock day")),
+  h("div",{class:"row",style:"margin-top:14px;gap:10px"},h("button",{class:"btn ghost sm grow",onclick:dayPdf},ic("down"),"PDF report"),h("button",{class:"btn ghost sm grow",onclick:dayImage},ic("image"),"Image"))));
+ $("#tseg").replaceChildren(h("button",{class:S.tseg==="calls"?"on":"",onclick:()=>setTseg("calls")},"To call"+(a?" · "+a:"")),h("button",{class:S.tseg==="follow"?"on":"",onclick:()=>setTseg("follow")},"Follow-up"+(fuN()?" · "+fuN():"")));
+ const calls=S.tseg==="calls";$("#calls").hidden=!calls;$("#alerts").hidden=!calls;$("#follow").hidden=calls;
+ if(!calls){drawFollow();return}
+ $("#alerts").replaceChildren(r.alerts.length?h("div",{class:"card warn flat"},h("div",{class:"row",style:"margin-bottom:8px"},ic("alert"),h("div",{class:"b"},"Needs attention")),
+  r.alerts.map(x=>h("div",{class:"row",style:"padding:5px 0"},h("div",{class:"grow b",onclick:()=>openProfile(x.roll),style:"cursor:pointer"},x.name),h("span",{class:"bdg abs"},x.s+" days in a row")))):null);
+ if(!a){$("#calls").replaceChildren(empty("check","All clear",r.noclass?"No class on this date.":"No absentees recorded for this date."));return}
+ const done=r.list.filter(x=>x.o).length;
+ $("#calls").replaceChildren(h("div",{class:"hh",style:"margin-top:4px"},h("h3",{},"Students to call"),h("span",{class:"sm-t mu b",id:"pgt"},done+" of "+a+" reached")),
+  h("div",{class:"prog",style:"margin:-4px 0 14px"},h("i",{id:"pgb",style:"width:"+(100*done/a)+"%"})),r.list.map(callCard))}
+function updProg(){const a=S.day.list.length,d=S.day.list.filter(x=>x.o).length;const t=$("#pgt"),b=$("#pgb");if(t)t.textContent=d+" of "+a+" reached";if(b)b.style.width=(100*d/a)+"%"}
+function callCard(s){const chips=h("div",{class:"oc"}),sv=h("span",{}),rem=h("input",{class:"in",type:"text",placeholder:"Add a remark…",value:s.r||"",enterkeyhint:"done"});
+ const save=async()=>{sv.textContent="Saving…";try{await call("tSave",S.date,s.roll,s.o||"",rem.value);s.r=rem.value;sv.textContent="Saved";updProg()}catch(e){sv.textContent="";toast(e.message||"Could not save","bad")}};
+ OUT.forEach(([o,k])=>{const b=h("button",{class:(s.o===o?"on ":"")+k,onclick:()=>{buzz();s.o=s.o===o?"":o;[...chips.children].forEach(c=>c.classList.toggle("on",c.dataset.o===s.o));save()}},o);b.dataset.o=o;chips.append(b)});
+ rem.onchange=save;
+ return h("div",{class:"card"},
+  h("div",{class:"row",style:"align-items:flex-start"},h("div",{class:"av abs"},tail(s.roll)),
+   h("div",{class:"grow"},h("div",{class:"nm nl",onclick:()=>openProfile(s.roll)},s.name),h("div",{class:"sm-t mu"},"S/O "+s.father+" · "+s.phone),
+    h("div",{class:"badges"},h("span",{class:"bdg "+(s.m>=5?"abs":s.m>=3?"lea":"")},s.m+(s.m===1?" absence":" absences")+" this month"),s.s>=2?h("span",{class:"bdg "+(s.s>=S.AT?"abs":"lea")},s.s+" days in a row"):null)),
+   h("a",{class:"btn call",href:"tel:+92"+s.phone.slice(1),"aria-label":"Call "+s.name},ic("phone"))),
+  chips,h("div",{class:"rmk"},rem,h("button",{class:"ib",onclick:()=>studentSheet(s),"aria-label":"More options"},ic("more"))),
+  h("div",{class:"sm-t mu",style:"min-height:20px;margin:6px 2px 0"},sv))}
+function studentSheet(s){const reason=h("input",{class:"in",placeholder:"Reason (optional)",value:s.r||""});
+ const act=(i,l,sub,fn,c)=>h("button",{class:"act",onclick:async()=>{try{if(await fn()===false)return;closeSheet();loadDay(false)}catch(e){toast(e.message||"Error","bad")}}},
+  h("span",{class:"ai",style:c?"color:var(--"+c+")":""},ic(i)),h("span",{class:"grow"},l,h("small",{class:"mu",style:"display:block;font-weight:600"},sub)));
+ sheet(s.name,h("div",{},fld("Reason (used for leave)",reason),
+  act("leaf","Mark on leave","Approved full-day leave",()=>call("tSetLeave",S.date,s.roll,reason.value,true),"lea"),
+  act("flag","Half leave","Not counted as an absence",()=>call("tSetHalf",S.date,s.roll,reason.value,true),"half"),
+  act("x","Not absent","Remove from today's list. The CR cannot add them back.",async()=>{if(!confirm("Remove "+s.name+" from today's absent list?"))return false;await call("tSetPresent",S.date,s.roll)},"abs"),
+  h("button",{class:"act",onclick:()=>{closeSheet();openProfile(s.roll)}},h("span",{class:"ai"},ic("user")),h("span",{class:"grow"},"Open profile",h("small",{class:"mu",style:"display:block;font-weight:600"},"History, calls and leaves")))))}
+async function toggleLock(){const r=S.day;if(!r.locked&&!confirm("Lock "+fdate(S.date)+"? The CR will only be able to add or remove half leaves."))return;
+ try{await call("tSetLock",S.date,!r.locked);toast(r.locked?"Day unlocked":"Day locked");loadDay(false)}catch(e){toast(e.message||"Error","bad")}}
+async function dayPdf(){toast("Preparing PDF…");try{await loadFonts();const r=await call("tLoad",S.date);savePdf(await pdfFromCanvases(dayReportPages(r,S.date,className(),document.querySelector(".logo img"))),"Absent_Report_"+S.date+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
+async function dayImage(){const r=S.day;if(!r)return;if(r.noclass){toast("No class on this date",1);return}if(r.recorded===false){toast("No attendance was recorded for this date",1);return}
+ toast("Preparing image…");try{await savePng({students:r.all,absent:r.list.map(x=>x.roll),leave:r.leaves.map(x=>x.roll),half:r.half.map(x=>x.roll)},S.date,className())}catch(e){toast(e.message||"Could not create the image","bad")}}
 
-/* ===================== day ===================== */
-async function loadDay(){$("#banner").replaceChildren();$("#ctl").replaceChildren();$("#body").replaceChildren(...skel(1,90),...skel(2,150));$("#cbar").hidden=true;
- try{const r=await call("crLoad",C.pin,C.date);C.students=r.students;C.A=new Set(r.absent);C.H=new Set(r.half||[]);C.Lv=new Set(r.leave||[]);C.NC=r.noclass||"";C.LK=!!r.locked;C.rec=!!r.recorded;C.dirty=false;drawDay()}
- catch(e){if(!authFail(e))$("#body").replaceChildren(errBox(e))}}
-function drawDbar(){$("#dbar").replaceChildren(h("button",{class:"ib",onclick:()=>gotoDate(addDays(C.date,-1)),"aria-label":"Previous day"},ic("left")),
- h("button",{class:"dtl",onclick:pickDate},ic("cal"),C.date===TODAY?"Today · "+fdate(C.date,{day:"numeric",month:"short"}):fdate(C.date)),
- h("button",{class:"ib",onclick:()=>gotoDate(addDays(C.date,1)),"aria-label":"Next day"},ic("right")))}
-function gotoDate(d){if(C.dirty&&!confirm("You have changes that are not submitted. Discard them?"))return;C.date=d;drawDbar();loadDay()}
-async function pickDate(){let mk=C.marks||{};
- try{if(!C.marks){const r=await call("crDates",C.pin);mk={};(r.recorded||[]).forEach(d=>mk[d]="rec");(r.noclass||[]).forEach(d=>mk[d]="nc");C.marks=mk}}catch(e){}
- calSheet({value:C.date,marks:mk,onPick:gotoDate})}
-function drawDay(){drawDbar();
- $("#banner").replaceChildren(C.NC?h("div",{class:"card warn flat"},h("div",{class:"row"},ic("cal"),h("div",{},h("div",{class:"b"},"No class on this date"),h("div",{class:"sm-t"},C.NC)))):
-  C.LK?h("div",{class:"card warn flat"},h("div",{class:"row"},ic("lock"),h("div",{},h("div",{class:"b"},"This day is locked"),h("div",{class:"sm-t"},"Your teacher has closed attendance. You can only add or remove half leaves.")))):null);
- if(C.NC){$("#ctl").replaceChildren();$("#body").replaceChildren(empty("cal","No class","Nothing to mark on this date."));$("#cbar").hidden=true;return}
- drawCtl();drawBody();updBar()}
-function drawCtl(){const q=h("input",{class:"in",type:"search",placeholder:"Search name or roll no.",value:C.q,oninput:e=>{C.q=e.target.value;drawBody()}});
- $("#ctl").replaceChildren(h("div",{class:"card",id:"stats"}),
-  h("div",{class:"row",style:"margin-bottom:12px;gap:10px"},h("div",{class:"srch grow",style:"margin:0"},ic("search"),q),
-   h("div",{class:"seg",style:"margin:0;width:104px"},h("button",{class:C.view==="grid"?"on":"",onclick:()=>setView("grid"),"aria-label":"Tiles"},ic("grid")),h("button",{class:C.view==="list"?"on":"",onclick:()=>setView("list"),"aria-label":"List"},ic("list")))),
-  h("div",{class:"legend"},h("span",{},h("i",{style:"background:var(--abs)"}),"Absent"),h("span",{},h("i",{style:"background:var(--half)"}),"Half leave"),h("span",{},h("i",{style:"background:var(--lea)"}),"On leave (locked)"),h("span",{class:"mu"},"Tap: absent → half → clear")))}
-function setView(v){C.view=v;try{localStorage.setItem("gct_cr_view",v)}catch(e){}drawCtl();drawBody()}
-function stOf(k){return C.Lv.has(k)?"l":C.A.has(k)?"a":C.H.has(k)?"h":"p"}
-const LAB={a:"Absent",h:"Half leave",l:"On leave",p:"Present"},AVC={a:"abs",h:"half",l:"lea",p:""};
-function tileEl(s){const st=stOf(s.roll);return h("button",{class:"tile "+st,onclick:()=>tap(s.roll),"aria-label":s.name},h("b",{},tail(s.roll)),h("small",{},s.name.split(" ")[0]),st==="h"?h("em",{},"½"):st==="l"?ic("lock"):st==="a"&&C.LK?ic("lock"):null)}
-function rowEl(s){const st=stOf(s.roll);return h("button",{class:"rowc "+st,onclick:()=>tap(s.roll)},h("div",{class:"av "+AVC[st]},tail(s.roll)),h("div",{style:"min-width:0"},h("div",{class:"nm"},s.name),h("div",{class:"sm-t mu"},s.roll)),h("span",{class:"bdg "+AVC[st]},LAB[st]))}
-function drawBody(){updStats();const q=C.q.trim().toLowerCase(),L=C.students.filter(s=>!q||(s.name+" "+s.roll).toLowerCase().includes(q));
- if(!L.length){$("#body").replaceChildren(empty("search","No students match"));return}
- const lv=L.filter(s=>C.Lv.has(s.roll)),rest=L.filter(s=>!C.Lv.has(s.roll)),grp=a=>C.view==="grid"?h("div",{class:"grid"},a.map(tileEl)):h("div",{},a.map(rowEl));
- $("#body").replaceChildren(lv.length?h("div",{class:"lbl",style:"margin-top:4px"},"On leave · "+lv.length):null,lv.length?grp(lv):null,lv.length&&rest.length?h("div",{class:"lbl"},"Class list"):null,rest.length?grp(rest):null)}
-function updStats(){const e=$("#stats");if(!e)return;const a=C.A.size,hf=C.H.size,lv=C.Lv.size,t=C.students.length;
- e.replaceChildren(h("div",{class:"stats"},stat(Math.max(0,t-a-hf-lv),"Present","var(--ok)"),stat(a,"Absent","var(--abs)"),stat(hf,"Half","var(--half)"),stat(lv,"Leave","var(--lea)")))}
-function tap(k){buzz();
- if(C.Lv.has(k)){toast("Approved leave. Only your teacher can change it.",1);return}
- const a=C.A.has(k),hf=C.H.has(k);
- if(C.LK){if(a){toast("Locked by your teacher. Only half leave can be changed.",1);return}if(hf)C.H.delete(k);else C.H.add(k)}
- else if(a){C.A.delete(k);C.H.add(k)}else if(hf)C.H.delete(k);else C.A.add(k);
- C.dirty=true;drawBody();updBar()}
-function updBar(){const b=$("#cbar");if(C.NC){b.hidden=true;return}b.hidden=false;
- b.replaceChildren(h("div",{},h("div",{class:"cs"},h("span",{class:"cstate "+(C.dirty?"dirty":C.rec?"ok":"")},C.dirty?"Unsaved changes":C.rec?"✓ Submitted":"Not submitted yet"),h("b",{},String(C.A.size)),h("span",{},"absent"),h("i",{}),h("b",{},String(C.H.size)),h("span",{},"half leave")),
-  h("button",{class:"btn",onclick:confirmSubmit},ic("check"),"Submit")))}
-function confirmSubmit(){const ab=[...C.A].sort(natc),nm=k=>(C.students.find(s=>s.roll===k)||{}).name||k;
- sheet("Submit attendance?",h("div",{},h("div",{class:"mu",style:"margin:-8px 0 14px"},fdate(C.date)),
-  h("div",{class:"stats",style:"grid-template-columns:repeat(3,1fr)"},stat(ab.length,"Absent","var(--abs)"),stat(C.H.size,"Half leave","var(--half)"),stat(Math.max(0,C.students.length-ab.length-C.H.size-C.Lv.size),"Present","var(--ok)")),
-  ab.length?h("div",{class:"pills"},ab.slice(0,14).map(k=>h("span",{class:"pill"},tail(k)+" "+nm(k))),ab.length>14?h("span",{class:"pill"},"+"+(ab.length-14)+" more"):null):h("div",{class:"mu",style:"margin-top:14px"},"No absentees. Everyone will be marked present."),
-  h("div",{class:"row",style:"margin-top:20px"},h("button",{class:"btn ghost grow",onclick:closeSheet},"Back"),
-   h("button",{class:"btn grow",onclick:async ev=>{const b=ev.currentTarget;b.disabled=true;try{const n=await call("crSubmit",C.pin,C.date,[...C.A],[...C.H]);C.dirty=false;C.rec=true;C.marks=null;updBar();success(n)}catch(x){b.disabled=false;if(!authFail(x)){closeSheet();toast(x.message||"Submit failed. Try again.",1)}else closeSheet()}}},"Submit"))))}
-function success(n){sheet("",h("div",{style:"text-align:center"},h("div",{class:"big-ok"},ic("check")),h("div",{style:"font-size:22px;font-weight:800;letter-spacing:-.02em"},"Attendance submitted"),
- h("div",{class:"mu",style:"margin:6px 0 20px"},n+" absent · "+C.H.size+" half leave · "+fdate(C.date,{weekday:"short",day:"numeric",month:"short"})),
- h("button",{class:"btn blk",onclick:()=>{closeSheet();makeImage(C.date)}},ic("image"),"Download image"),h("button",{class:"btn ghost blk",style:"margin-top:10px",onclick:closeSheet},"Done")))}
+/* ----- follow-up ----- */
+function refreshFollow(){call("tFollowUp").then(r=>{S.fu=r;if(S.view==="today")drawToday()}).catch(()=>{})}
+async function loadFollow(fresh){try{if(fresh){S.fu=await call("tFollowUp");drawToday()}else await swr("tFollowUp",[],r=>{S.fu=r;if(S.view==="today"&&S.tseg==="follow")drawFollow()})}catch(e){toast(e.message||"Could not load","bad")}}
+function drawFollow(){const r=S.fu,c=$("#follow");if(!r){c.replaceChildren(...skel(2,150));return}
+ c.replaceChildren(
+  r.retry.length?h("div",{},h("div",{class:"hh",style:"margin-top:4px"},h("h3",{},"To retry"),h("span",{class:"bdg lea"},r.retry.length)),r.retry.map(retryCard)):null,
+  r.wrong.length?h("div",{},h("div",{class:"hh"},h("h3",{},"Wrong numbers"),h("span",{class:"bdg abs"},r.wrong.length)),r.wrong.map(wrongCard)):null,
+  !r.retry.length&&!r.wrong.length?empty("check","Nothing to follow up","Everyone you called has been reached."):null)}
+function retryCard(x){const chips=h("div",{class:"oc"}),rem=h("input",{class:"in",type:"text",placeholder:"Remarks",value:x.r||""});
+ [...OUT,["Not needed","n"]].forEach(([o,k])=>chips.append(h("button",{class:(x.o===o?"on ":"")+k,onclick:async()=>{buzz();try{await call("tSave",x.d,x.roll,o,rem.value);toast("Saved");loadFollow(true)}catch(e){toast(e.message||"Error","bad")}}},o)));
+ return h("div",{class:"card"},h("div",{class:"row",style:"align-items:flex-start"},h("div",{class:"av lea"},tail(x.roll)),
+  h("div",{class:"grow"},h("div",{class:"nm nl",onclick:()=>openProfile(x.roll)},x.name),h("div",{class:"sm-t mu"},"S/O "+x.father+" · "+x.phone),h("div",{class:"badges"},h("span",{class:"bdg lea"},x.o+" · "+fdate(x.d,{day:"numeric",month:"short"})))),
+  h("a",{class:"btn call",href:"tel:+92"+x.phone.slice(1),"aria-label":"Call"},ic("phone"))),chips,h("div",{class:"rmk"},rem))}
+function wrongCard(x){const ph=h("input",{class:"in",type:"tel",value:x.phone,placeholder:"03001234567",inputmode:"tel"});
+ const b=h("button",{class:"btn",onclick:async()=>{b.disabled=true;try{await call("tSetPhone",x.roll,ph.value);toast("Number saved. Student moved to retry.");loadFollow(true)}catch(e){toast(e.message||"Error","bad");b.disabled=false}}},"Save");
+ return h("div",{class:"card"},h("div",{class:"row"},h("div",{class:"av abs"},tail(x.roll)),h("div",{class:"grow"},h("div",{class:"nm nl",onclick:()=>openProfile(x.roll)},x.name),h("div",{class:"badges"},h("span",{class:"bdg abs"},"Wrong number · "+fdate(x.d,{day:"numeric",month:"short"}))))),
+  h("div",{class:"rmk"},ph,b))}
 
-/* ===================== image report ===================== */
+/* ===================== leaves ===================== */
+function drawLeaves(){const r=S.day,c=$("#lv");if(!r){c.replaceChildren(...skel(2,100));return}
+ const rm=(label,cls,fn,ask)=>{const b=h("button",{class:"btn sm "+cls,onclick:async()=>{if(ask&&!confirm(ask))return;b.disabled=true;try{await fn();loadDay(false)}catch(e){toast(e.message||"Error","bad");b.disabled=false}}},label);return b};
+ const none=!r.leaves.length&&!r.half.length&&!r.removed.length&&!r.upcoming.length;
+ c.replaceChildren(h("div",{class:"row",style:"gap:10px"},h("button",{class:"btn grow",onclick:leaveSheet},ic("plus"),"Leave / half leave"),h("button",{class:"btn soft grow",onclick:advSheet},ic("cal"),"In advance")),
+  none?empty("leaf","No leaves","Nothing recorded for "+fdate(S.date,{day:"numeric",month:"short"})+"."):null,
+  sect("On leave",r.leaves,x=>item({av:tail(x.roll),avc:"lea",title:x.name,sub:x.reason||"Approved leave",right:rm(x.adv?"Cancel":"Remove","danger",()=>x.adv?call("tCancelLeave",x.adv):call("tSetLeave",S.date,x.roll,"",false),x.adv?"Cancel this leave for all its days?":"")})),
+  sect("Half leave",r.half,x=>item({av:tail(x.roll),avc:"half",title:x.name,sub:x.reason||"Half day",right:rm("Remove","danger",()=>call("tSetHalf",S.date,x.roll,"",false))})),
+  sect("Removed by you",r.removed,x=>item({av:tail(x.roll),title:x.name,sub:"Removed from the absent list",right:rm("Restore","soft",()=>call("tRestore",S.date,x.roll))})),
+  sect("Upcoming leaves",r.upcoming,x=>item({av:tail(x.roll),avc:"lea",title:x.name,sub:(x.from===x.to?fdate(x.from,{day:"numeric",month:"short"}):fdate(x.from,{day:"numeric",month:"short"})+" – "+fdate(x.to,{day:"numeric",month:"short"}))+" · "+x.reason,right:rm("Cancel","danger",()=>call("tCancelLeave",x.id),"Cancel this leave for "+x.name+"?")})))}
+function picker(sel){const q=h("input",{class:"in",type:"search",placeholder:"Search by name or roll no.",autocomplete:"off"}),list=h("div",{class:"pk"});
+ const all=(S.day&&S.day.all)||[];const draw=()=>{const t=q.value.trim().toLowerCase();list.replaceChildren(...all.filter(x=>!t||(x.name+" "+x.roll).toLowerCase().includes(t)).slice().sort((a,b)=>natc(a.roll,b.roll)).map(x=>h("button",{type:"button",class:sel.roll===x.roll?"on":"",onclick:()=>{sel.roll=x.roll;q.value=x.name;draw()}},h("b",{},tail(x.roll)),x.name)));if(!list.children.length)list.append(h("div",{class:"mu",style:"padding:12px"},"No student found"))};
+ q.oninput=()=>{sel.roll="";draw()};draw();return h("div",{},q,list)}
+function leaveSheet(){const sel={roll:""},type=h("div",{class:"seg"}),reason=h("input",{class:"in",placeholder:"Reason (e.g. sick, family event)"}),msg=h("div",{class:"err"});let kind="full";
+ const dr=()=>type.replaceChildren(h("button",{class:kind==="full"?"on":"",onclick:()=>{kind="full";dr()}},"Full leave"),h("button",{class:kind==="half"?"on":"",onclick:()=>{kind="half";dr()}},"Half leave"));dr();
+ sheet("Record a leave",h("div",{},h("div",{class:"mu sm-t",style:"margin:-8px 0 14px"},"For "+fdate(S.date)),type,fld("Student",picker(sel)),fld("Reason",reason),msg,
+  h("button",{class:"btn blk",onclick:async e=>{if(!sel.roll){msg.textContent="Choose a student";return}e.currentTarget.disabled=true;try{await call(kind==="half"?"tSetHalf":"tSetLeave",S.date,sel.roll,reason.value,true);closeSheet();toast("Saved");loadDay(false)}catch(x){msg.textContent=x.message||"Error";e.currentTarget.disabled=false}}},"Save")))}
+function advSheet(){const sel={roll:""},f=h("input",{class:"in",type:"date",value:S.date}),t=h("input",{class:"in",type:"date",value:S.date}),reason=h("input",{class:"in",placeholder:"Reason (e.g. sports camp, medical)"}),msg=h("div",{class:"err"});
+ sheet("Leave in advance",h("div",{},h("div",{class:"mu sm-t",style:"margin:-8px 0 14px"},"Applies to every class day in the range. The CR sees these students locked on leave."),fld("Student",picker(sel)),
+  h("div",{class:"fgrid"},fld("From",f),fld("To",t)),fld("Reason",reason),msg,
+  h("button",{class:"btn blk",onclick:async e=>{if(!sel.roll){msg.textContent="Choose a student";return}e.currentTarget.disabled=true;try{await call("tAddLeave",sel.roll,f.value,t.value,reason.value);closeSheet();toast("Advance leave saved");loadDay(false)}catch(x){msg.textContent=x.message||"Error";e.currentTarget.disabled=false}}},"Save")))}
+
+/* ===================== records ===================== */
+function drawRecords(){$("#rseg").replaceChildren(...[["d","Daily"],["m","Monthly"],["b","Dashboard"]].map(([k,l])=>h("button",{class:S.rmode===k?"on":"",onclick:()=>{S.rmode=k;drawRecords()}},l)));
+ $("#rctl").replaceChildren(S.rmode==="b"?null:h("div",{class:"row",style:"margin-bottom:14px"},h("input",{class:"in grow",type:"month",value:S.ym,onchange:e=>{if(e.target.value){S.ym=e.target.value;loadRecords()}}}),
+  S.rmode==="m"?h("button",{class:"btn soft",onclick:monthPdf},ic("down"),"PDF"):null));loadRecords()}
+async function loadRecords(){const b=$("#rbody"),m=S.rmode;b.replaceChildren(...skel(3,110));
+ try{if(m==="d")recDaily(await call("tDaily",S.ym));else if(m==="m")recMonthly(await call("tMonth",S.ym));else await swr("tDashboard",[],r=>{if(S.view==="records"&&S.rmode==="b")recDash(r)})}
+ catch(e){b.replaceChildren(errBox(e))}}
+function recDaily(r){const items=r.days.map(x=>({k:"d",d:x.d,x})).concat(r.noclass.map(x=>({k:"n",d:x.d,x}))).sort((a,b)=>b.d.localeCompare(a.d));
+ const g=(l,arr,c,why)=>arr.length?h("div",{style:"margin-top:12px"},h("span",{class:"bdg "+c},l+" · "+arr.length),h("div",{class:"pills"},arr.map(p=>h("span",{class:"pill"},tail(p.roll)+" "+p.name+(why&&p.reason?" – "+p.reason:""))))):null;
+ $("#rbody").replaceChildren(h("div",{class:"mu sm-t b",style:"margin:0 2px 12px"},r.days.length?r.days.length+" class days recorded"+(r.noclass.length?" · "+r.noclass.length+" no-class days":""):"No attendance recorded in this month."),
+  items.map(it=>it.k==="n"?h("div",{class:"card flat",style:"background:var(--s2)"},h("div",{class:"row"},ic("cal"),h("div",{},h("div",{class:"b"},fdate(it.d)),h("div",{class:"mu sm-t"},"No class · "+it.x.reason)))):
+  h("div",{class:"card"},h("div",{class:"row"},h("div",{class:"grow"},h("div",{class:"nm"},fdate(it.d)),h("div",{class:"sm-t mu"},it.x.absent.length+" absent · "+it.x.leave.length+" leave · "+it.x.half.length+" half")),
+   h("button",{class:"btn soft sm",onclick:()=>{S.date=it.d;drawDbar();go("today");loadDay(true)}},"Open")),
+   g("Absent",it.x.absent,"abs"),g("On leave",it.x.leave,"lea",1),g("Half leave",it.x.half,"half",1),!it.x.absent.length&&!it.x.leave.length&&!it.x.half.length?h("div",{class:"mu sm-t",style:"margin-top:10px"},"Everyone present."):null)))}
+function recMonthly(r){const rows=r.rows.filter(x=>x.n||x.l||x.h).sort((a,b)=>b.n-a.n||b.l-a.l||b.h-a.h),zero=r.rows.length-rows.length,cl=n=>n>=5?"x":n>=3?"w":"";
+ $("#rbody").replaceChildren(h("div",{class:"mu sm-t b",style:"margin:0 2px 12px"},r.days?r.days+" class days · "+zero+" students with no absences or leave":"No attendance recorded in this month."),
+  rows.map(x=>item({av:String(x.n),avc:x.n>=5?"abs":x.n>=3?"lea":"",title:x.name,sub:x.roll,onclick:()=>openProfile(x.roll),
+   extra:h("div",{class:"row",style:"margin-top:8px;gap:10px"},h("div",{class:"trk"},h("i",{class:cl(x.n),style:"width:"+(r.days?Math.min(100,100*x.n/r.days):0)+"%"})),(x.l||x.h)?h("span",{class:"bdg lea"},[x.l?x.l+" leave":"",x.h?x.h+" half":""].filter(Boolean).join(" · ")):null)})))}
+async function monthPdf(){toast("Preparing PDF…");try{await loadFonts();const r=await call("tMonth",S.ym);savePdf(await pdfFromCanvases(monthReportPages(r,S.ym,className(),document.querySelector(".logo img"))),"Monthly_Summary_"+S.ym+".pdf")}catch(e){toast(e.message||"PDF failed","bad")}}
+function recDash(r){const b=$("#rbody");if(!r.latest){b.replaceChildren(empty("chart","No data yet","Dashboards appear once attendance is recorded."));return}
+ const x0=r.latest,col=v=>v<75?"var(--abs)":v<90?"var(--lea)":"var(--brand)",mx=Math.max(1,...r.weekdays.map(x=>x.rate));
+ b.replaceChildren(
+  h("div",{class:"card"},h("div",{class:"mu sm-t b"},"Latest recorded day · "+fdate(x0.d)),h("div",{class:"row",style:"margin:10px 0 14px"},h("div",{style:"font-size:46px;font-weight:800;letter-spacing:-.03em;line-height:1;color:"+col(x0.rate)},x0.rate+"%"),h("div",{class:"mu sm-t b"},"attendance")),
+   h("div",{class:"stats"},stat(x0.t-x0.a-x0.l-x0.h,"Present","var(--ok)"),stat(x0.a,"Absent","var(--abs)"),stat(x0.l,"On leave","var(--lea)"),stat(x0.h,"Half","var(--half)"))),
+  h("div",{class:"card"},h("div",{class:"mu sm-t b"},"This month"),h("div",{class:"stats",style:"margin-top:10px"},stat(r.month.rate==null?"–":r.month.rate+"%","Attendance"),stat(r.month.days,"Class days"),stat(r.month.low,"Below "+r.minPct+"%",r.month.low?"var(--abs)":""),stat(r.top.length?r.top[0].n:0,"Most absences"))),
+  h("div",{class:"card"},h("div",{class:"b"},"Last "+r.trend.length+" class days"),h("div",{class:"trend"},r.trend.map(x=>h("div",{class:"tc"},h("em",{},String(x.rate)),h("i",{style:"height:"+Math.max(4,x.rate*.8)+"px;background:"+col(x.rate)}),h("span",{},x.d.slice(8)))))),
+  h("div",{class:"card"},h("div",{class:"b"},"Absence rate by weekday"),r.weekdays.map(x=>h("div",{class:"wd"},h("span",{},x.wd),h("div",{class:"trk"},h("i",{class:x.rate===mx&&x.rate>0?"x":"",style:"width:"+(100*x.rate/mx)+"%"})),h("b",{},x.rate+"%")))),
+  r.top.length?h("div",{},h("div",{class:"lbl"},"Most absences this month"),r.top.map(x=>item({av:String(x.n),avc:x.n>=5?"abs":"lea",title:x.name,sub:x.roll,onclick:()=>openProfile(x.roll)}))):null)}
+
+/* ===================== more ===================== */
+function drawMore(){const m=(i,t,s,v)=>h("button",{class:"menu",onclick:()=>go(v)},h("div",{class:"mi"},ic(i)),h("div",{},h("div",{class:"b"},t),h("small",{},s)),h("span",{class:"ch"},ic("right")));
+ $("#v-more").replaceChildren(m("users","Students","Add, edit, remove and open profiles","students"),m("cal","No-class days","Holidays and cancelled classes","noclass"),m("key","CR PIN & alerts","Change the PIN your CR uses","settings"),PWA?m("grid","Classes on this device","Switch, add or remove classes","classes"):null,
+  h("div",{class:"mu sm-t",style:"text-align:center;margin-top:22px"},"Government College of Technology, Sargodha"))}
+
+/* ----- students ----- */
+async function loadStudents(){const c=$("#v-students");if(!S.students.length)c.replaceChildren(...skel(4,70));try{S.students=await call("tStudents");drawStudents()}catch(e){c.replaceChildren(errBox(e))}}
+function drawStudents(){const c=$("#v-students");
+ if(!c.querySelector("#slist")){const q=h("input",{class:"in",type:"search",placeholder:"Search students",oninput:fillStudents});
+  c.replaceChildren(h("div",{class:"row",style:"margin-bottom:14px"},h("div",{class:"srch grow",style:"margin:0"},ic("search"),q),h("button",{class:"btn",onclick:()=>studentForm()},ic("plus"),"Add")),h("div",{id:"slist"}))}
+ fillStudents()}
+function fillStudents(){const inp=$("#v-students input"),q=(inp&&inp.value||"").trim().toLowerCase();
+ const list=S.students.slice().sort((a,b)=>natc(a.roll,b.roll)).filter(s=>!q||(s.name+" "+s.roll).toLowerCase().includes(q));
+ $("#slist").replaceChildren(list.length?list.map(s=>item({av:tail(s.roll),title:s.name,sub:s.roll+" · S/O "+s.father+" · "+s.phone+(s.joined?" · joined "+s.joined:""),onclick:()=>studentActions(s),right:ic("right")})):empty("users","No students found"))}
+function studentActions(s){const act=(i,l,fn,c)=>h("button",{class:"act",onclick:fn},h("span",{class:"ai",style:c?"color:var(--"+c+")":""},ic(i)),h("span",{class:"grow"},l));
+ sheet(s.name,h("div",{},act("user","Open profile",()=>{closeSheet();openProfile(s.roll)}),act("edit","Edit details",()=>{closeSheet();studentForm(s)}),act("trash","Remove from class",async()=>{if(!confirm("Remove "+s.name+" from the class list? Past records are kept."))return;try{S.students=await call("tDeleteStudent",s.roll);closeSheet();drawStudents();toast("Removed")}catch(e){toast(e.message||"Error","bad")}},"abs")))}
+function studentForm(s){const f={r:h("input",{class:"in",placeholder:"24-ETC-01",value:s?s.roll:""}),n:h("input",{class:"in",placeholder:"Student name",value:s?s.name:""}),fa:h("input",{class:"in",placeholder:"Father's name",value:s?s.father:""}),p:h("input",{class:"in",type:"tel",placeholder:"03001234567",value:s?s.phone:"",inputmode:"tel"}),j:h("input",{class:"in",type:"date",value:s?(s.joined||""):TODAY})},msg=h("div",{class:"err"});
+ sheet(s?"Edit student":"Add student",h("div",{},h("div",{class:"fgrid"},fld("Roll no.",f.r),fld("Phone",f.p),fld("Name",f.n,"full"),fld("Father's name",f.fa,"full"),fld("Joined on",f.j,"full")),
+  h("div",{class:"mu sm-t"},"Class days before the joined date count as absent. Past records are not rewritten. Students stay in roll-number order."),msg,
+  h("button",{class:"btn blk",style:"margin-top:14px",onclick:async e=>{e.currentTarget.disabled=true;try{S.students=await call("tSaveStudent",s?s.roll:"",{roll:f.r.value,name:f.n.value,father:f.fa.value,phone:f.p.value,joined:f.j.value});closeSheet();drawStudents();toast("Saved")}catch(x){msg.textContent=x.message||"Error";e.currentTarget.disabled=false}}},"Save")))}
+
+/* ----- profile ----- */
+async function openProfile(roll){go("profile");const c=$("#v-profile");c.replaceChildren(...skel(3,120));
+ try{drawProfile(await call("tProfile",roll))}catch(e){c.replaceChildren(errBox(e))}}
+function drawProfile(p){const s=p.student,ml=m=>new Date(m+"-15T12:00:00").toLocaleDateString("en-GB",{month:"short",year:"numeric"}),c=$("#v-profile");
+ const L=(t,arr,f)=>arr.length?h("div",{},h("div",{class:"lbl"},t),arr.map(f)):null;
+ c.replaceChildren(h("div",{class:"card"},h("div",{class:"row"},h("div",{class:"av",style:"width:58px;height:58px;font-size:18px"},tail(s.roll)),h("div",{class:"grow"},h("div",{class:"nm",style:"font-size:19px"},s.name),h("div",{class:"sm-t mu"},s.roll+" · S/O "+s.father),h("div",{class:"sm-t mu"},s.phone)),
+   h("a",{class:"btn call",href:"tel:+92"+s.phone.slice(1),"aria-label":"Call"},ic("phone")))),
+  h("div",{class:"card"},h("div",{class:"row",style:"margin-bottom:12px"},h("div",{style:"font-size:42px;font-weight:800;letter-spacing:-.03em;line-height:1;color:"+(p.pct==null?"var(--mu)":p.pct<75?"var(--abs)":"var(--ok)")},p.pct==null?"–":p.pct+"%"),h("div",{class:"mu sm-t b"},"attendance over "+p.days+" class days")),
+   h("div",{class:"stats"},stat(p.absent,"Absent","var(--abs)"),stat(p.leave,"On leave","var(--lea)"),stat(p.half,"Half","var(--half)"),stat(p.streak,"In a row",p.streak>=2?"var(--abs)":""))),
+  p.streak>=2?h("div",{class:"card warn flat"},h("div",{class:"row"},ic("alert"),h("div",{class:"b"},"Absent "+p.streak+" class days in a row"))):null,
+  L("By month",p.months,x=>item({av:ml(x.m).slice(0,3),title:ml(x.m),sub:x.a+" absent · "+x.l+" leave · "+x.h+" half"})),
+  L("Absences and calls",p.absentDays,x=>item({av:fdate(x.d,{day:"numeric"}),avc:"abs",title:fdate(x.d,{weekday:"short",day:"numeric",month:"short"}),sub:x.r||"No remarks",right:h("span",{class:"bdg "+(x.o==="Informed"?"ok":x.o?"lea":"abs")},x.o||"Not called")})),
+  L("Leaves",p.leaveDays,x=>item({av:fdate(x.d,{day:"numeric"}),avc:"lea",title:fdate(x.d),sub:x.reason||"Approved leave"})),
+  L("Half leaves",p.halfDays,x=>item({av:fdate(x.d,{day:"numeric"}),avc:"half",title:fdate(x.d),sub:x.reason||"Half day"})))}
+
+/* ----- no-class days ----- */
+const nextDay=d=>addDays(d,1);
+function drawNoclass(){const c=$("#v-noclass"),f=h("input",{class:"in",type:"date",value:TODAY}),t=h("input",{class:"in",type:"date",value:TODAY}),r=h("input",{class:"in",placeholder:"Reason (e.g. Eid holiday)"}),msg=h("div",{class:"err"});
+ const save=async()=>{const go2=fo=>call("tSetNoClass",f.value,t.value,r.value,fo);msg.textContent="";
+  try{try{await go2(false)}catch(e){const m=e.message||"",i=m.indexOf("HAS_RECORDS:");if(i<0)throw e;if(!confirm("Attendance is already recorded on: "+m.slice(i+12)+". Marking these as no-class will DELETE those records. Continue?"))return;await go2(true)}
+   r.value="";toast("Saved");loadDay(false);drawNoclass()}catch(e){msg.textContent=e.message||"Error"}};
+ const hol=(S.day&&S.day.holidays)||[],g=[];hol.forEach(x=>{const l=g[g.length-1];if(l&&l.reason===x.reason&&nextDay(l.to)===x.d)l.to=x.d;else g.push({from:x.d,to:x.d,reason:x.reason})});
+ c.replaceChildren(h("div",{class:"card"},h("div",{class:"mu sm-t",style:"margin-bottom:12px"},"The CR cannot submit attendance on these dates, and they are not counted in reports."),h("div",{class:"fgrid"},fld("From",f),fld("To",t)),fld("Reason",r),msg,h("button",{class:"btn blk",onclick:save},"Mark no-class")),
+  h("div",{class:"lbl"},"Upcoming no-class days"),g.length?g.map(x=>item({av:"•",title:x.from===x.to?fdate(x.from):fdate(x.from,{day:"numeric",month:"short"})+" – "+fdate(x.to,{day:"numeric",month:"short"}),sub:x.reason,right:h("button",{class:"btn sm danger",onclick:async()=>{try{await call("tRemoveNoClass",x.from,x.to);toast("Removed");await loadDay(false);drawNoclass()}catch(e){toast(e.message||"Error","bad")}}},"Remove")})):empty("cal","None upcoming"))}
+
+/* ----- settings ----- */
+function drawSettings(){const c=$("#v-settings"),np=h("input",{class:"in",placeholder:"New PIN (4–12 characters)"}),msg=h("div",{class:"err"});
+ c.replaceChildren(h("div",{class:"card"},h("div",{class:"b"},"Class PIN for the CR"),h("div",{class:"mu",style:"margin:4px 0 14px"},S.day?"Current PIN: "+S.day.crPin:"Loading…"),np,msg,
+   h("button",{class:"btn blk",style:"margin-top:10px",onclick:async()=>{try{const p=await call("tSetCrPin",np.value);toast("PIN changed");np.value="";if(S.day)S.day.crPin=p;drawSettings()}catch(e){msg.textContent=e.message||"Error"}}},"Change PIN")),
+  h("div",{class:"card flat"},h("div",{class:"b"},"Alerts"),h("div",{class:"mu sm-t",style:"margin-top:6px"},"Month badge: amber from 3 absences, red from 5. “Needs attention” appears when a student is absent 3 recorded class days in a row. A leave, half leave or present day resets the count. Half leaves are not counted as absences and are not printed in the PDF reports.")))}
+
 function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
 function fit(x,t,max){if(x.measureText(t).width<=max)return t;while(t.length>1&&x.measureText(t+"…").width>max)t=t.slice(0,-1);return t+"…"}
 const FF="Manrope,system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
@@ -344,18 +455,116 @@ async function savePng(r,d,cname){await loadFonts();
  const c=renderPng(r,d,cname,document.querySelector(".logo img"));
  await new Promise(ok=>c.toBlob(b=>{deliver(b,"Attendance_"+d+".png");ok()},"image/png"))}
 
-async function makePng(r,d){await savePng(r,d,cname())}
-async function makeImage(d){toast("Preparing image…");
- try{const r=await call("crLoad",C.pin,d);if(r.noclass){toast("No class on this date: "+r.noclass,1);return}if(!r.recorded){toast("No attendance was recorded for this date",1);return}await makePng(r,d)}
- catch(e){if(!authFail(e))toast(e.message||"Could not create the image",1)}}
-$("#png").onclick=()=>makeImage(C.date);
-$("#menu").onclick=()=>sheet("Menu",h("div",{},
- h("button",{class:"act",onclick:()=>{closeSheet();loadDay()}},h("span",{class:"ai"},ic("refresh")),h("span",{class:"grow"},"Refresh")),
- h("button",{class:"act",onclick:()=>{closeSheet();showConn("")}},h("span",{class:"ai"},ic("key")),h("span",{class:"grow"},PWA?"Change class or PIN":"Enter a different PIN")),
- h("button",{class:"act",onclick:()=>{if(!confirm("Disconnect this phone from the class?"))return;closeSheet();CFG=null;saveCfg();showConn("")}},h("span",{class:"ai",style:"color:var(--abs)"},ic("x")),h("span",{class:"grow"},"Disconnect this phone"))));
+/* ===================== PDF reports: drawn like the app, saved as A4 pages ===================== */
+const PW=1240,PH=1754,PM=64,PIW=PW-2*PM,RC={BR:"#0b6b57",INK:"#0e1a16",MU:"#62736c",LN:"#e1e8e4",S2:"#eef2f0",OK:"#16803c",OKS:"#e2f5e8",RED:"#c4342a",REDS:"#fdebe9",AMB:"#a96b0b",AMBS:"#fdf1d6",MINP:75};
+function newPage(){const c=document.createElement("canvas");c.width=PW;c.height=PH;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,PW,PH);x.textBaseline="alphabetic";x.textAlign="left";return[c,x]}
+function rcard(x,a,b,w,h,r,fill,stroke){x.fillStyle=fill;rr(x,a,b,w,h,r);x.fill();if(stroke){x.strokeStyle=stroke;x.lineWidth=2;rr(x,a+1,b+1,w-2,h-2,r);x.stroke()}}
+function rbadge(x,t,rx,y,col,bg){x.font="800 21px "+FF;const w=x.measureText(t).width+30;rcard(x,rx-w,y,w,38,19,bg);x.fillStyle=col;x.textAlign="left";x.fillText(t,rx-w+15,y+27);return w}
+function ravatar(x,a,b,s,t,col,bg){rcard(x,a,b,s,s,Math.round(s*.3),bg);x.fillStyle=col;x.textAlign="center";x.font="800 "+Math.round(s*.36)+"px "+FF;x.fillText(t,a+s/2,b+s*.63);x.textAlign="left"}
+function rlogo(x,logo,a,b,s){rcard(x,a,b,s,s,Math.round(s*.29),"#fff",RC.LN);if(logo&&logo.naturalWidth){const k=Math.min(s*.76/logo.naturalWidth,s*.76/logo.naturalHeight),w=logo.naturalWidth*k,h=logo.naturalHeight*k;x.drawImage(logo,a+s/2-w/2,b+s/2-h/2,w,h)}}
+function bigHeader(x,logo,title,sub,pill){rlogo(x,logo,PM,56,104);x.fillStyle=RC.INK;x.font="800 48px "+FF;x.fillText(title,PM+132,108);
+ x.font="800 26px "+FF;const pw=x.measureText(pill).width+56;rcard(x,PW-PM-pw,120,pw,52,20,"#fff",RC.LN);x.fillStyle=RC.BR;x.fillText(pill,PW-PM-pw+28,155);
+ x.fillStyle=RC.MU;x.font="600 27px "+FF;x.fillText(fit(x,sub,PIW-132-pw-20),PM+132,152);return 190}
+function miniHeader(x,logo,title,pill){rlogo(x,logo,PM,44,64);x.fillStyle=RC.INK;x.font="800 30px "+FF;x.fillText(title,PM+88,84);x.fillStyle=RC.MU;x.font="700 24px "+FF;x.textAlign="right";x.fillText(pill,PW-PM,84);x.textAlign="left";x.fillStyle=RC.LN;x.fillRect(PM,118,PIW,2)}
+function summaryCard(x,y,parts,total,pct,tiles){rcard(x,PM,y,PIW,250,40,"#f6f9f8",RC.LN);
+ const cx=PM+32+112,cy=y+125,R=84,nz=parts.filter(p=>p[0]>0).length;x.lineWidth=34;x.lineCap="butt";x.strokeStyle=RC.LN;x.beginPath();x.arc(cx,cy,R,0,7);x.stroke();
+ if(total&&nz===1){x.strokeStyle=parts.filter(p=>p[0]>0)[0][1];x.beginPath();x.arc(cx,cy,R,0,7);x.stroke()}
+ else if(total){let a0=-Math.PI/2;parts.forEach(p=>{if(!p[0])return;const a1=a0+2*Math.PI*p[0]/total;x.strokeStyle=p[1];x.beginPath();x.arc(cx,cy,R,a0+.04,a1-.04);x.stroke();a0=a1})}
+ x.textAlign="center";x.fillStyle=RC.INK;x.font="800 46px "+FF;x.fillText(pct==null?"–":pct+"%",cx,cy+10);x.fillStyle=RC.MU;x.font="800 15px "+FF;x.fillText("ATTENDANCE",cx,cy+36);
+ const sx=PM+32+224+36,sw=(PIW-32-224-36-32-16)/2;
+ tiles.forEach((t,i)=>{const bx=sx+(i%2)*(sw+16),by=y+26+Math.floor(i/2)*110;rcard(x,bx,by,sw,94,28,"#fff",RC.LN);x.fillStyle=t[2]||RC.INK;x.font="800 46px "+FF;x.fillText(String(t[1]),bx+sw/2,by+52);x.fillStyle=RC.MU;x.font="800 20px "+FF;x.fillText(t[0].toUpperCase(),bx+sw/2,by+80)});x.textAlign="left"}
+function heading(t,n,col,bg){return{h:62,gap:6,keep:true,draw(x,y){x.fillStyle=RC.INK;x.font="800 34px "+FF;x.textAlign="left";x.fillText(t,PM+4,y+42);const w=x.measureText(t).width;rcard(x,PM+4+w+16,y+6,64,42,21,bg);x.fillStyle=col;x.textAlign="center";x.font="800 24px "+FF;x.fillText(String(n),PM+4+w+48,y+36);x.textAlign="left"}}}
+function pageFooter(x,i,n,cname,last){if(last){x.fillStyle=RC.MU;x.fillRect(PW-PM-400,PH-190,400,2);x.font="700 22px "+FF;x.textAlign="right";x.fillText("Incharge signature",PW-PM,PH-156);x.textAlign="left"}
+ x.fillStyle=RC.LN;x.fillRect(PM,PH-108,PIW,2);x.fillStyle=RC.MU;x.font="700 21px "+FF;x.fillText("Government College of Technology, Sargodha  ·  "+cname,PM,PH-68);
+ x.textAlign="right";x.fillText("Page "+i+" of "+n,PW-PM,PH-68);x.textAlign="left";x.fillStyle="#98a2b3";x.font="600 18px "+FF;x.fillText("Generated "+new Date().toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}),PM,PH-38)}
+function paginate(blocks,firstTop,otherTop,bottom){const pages=[[]];let y=firstTop,pi=0;
+ blocks.forEach((b,i)=>{const need=b.h+(b.keep&&blocks[i+1]?blocks[i+1].h:0);if(y+need>bottom&&pages[pi].length){pages.push([]);pi++;y=otherTop}pages[pi].push({b:b,y:y});y+=b.h+(b.gap||0)});return pages}
+function buildReport(o,logo){const sig=80,pages=paginate(o.blocks,190+34+250+30,150,PH-130);
+ const lastY=pages[pages.length-1].reduce((m,p)=>Math.max(m,p.y+p.b.h),0);if(lastY>PH-130-sig){pages.push([])}
+ return pages.map((pg,i)=>{const[c,x]=newPage();
+  if(i===0){bigHeader(x,logo,o.title,o.sub,o.pill);summaryCard(x,224,o.parts,o.total,o.pct,o.tiles)}else miniHeader(x,logo,o.title,o.pill);
+  pg.forEach(p=>p.b.draw(x,p.y));pageFooter(x,i+1,pages.length,o.cname,i===pages.length-1);return c})}
+const oc=s=>s==="Informed"?[RC.OK,RC.OKS]:s?[RC.AMB,RC.AMBS]:[RC.RED,RC.REDS];
+function absBlock(s){const hr=!!(s.r&&String(s.r).trim()),hh=hr?170:118;return{h:hh,gap:14,draw(x,y){rcard(x,PM,y,PIW,hh,32,"#fff",RC.LN);ravatar(x,PM+22,y+22,72,tail(s.roll),RC.RED,RC.REDS);
+  x.fillStyle=RC.INK;x.font="800 31px "+FF;x.fillText(fit(x,s.name,450),PM+120,y+46);x.fillStyle=RC.MU;x.font="600 22px "+FF;x.fillText(fit(x,s.roll+"  ·  S/O "+s.father,450),PM+120,y+77);x.fillText(s.phone,PM+120,y+105);
+  const rx=PM+PIW-26,o=oc(s.o);rbadge(x,s.o||"Not called",rx,y+16,o[0],o[1]);
+  const m=s.m>=5?[RC.RED,RC.REDS]:s.m>=3?[RC.AMB,RC.AMBS]:[RC.MU,RC.S2];let bw=rbadge(x,s.m+(s.m===1?" absence":" absences")+" this month",rx,y+62,m[0],m[1]);
+  if(s.s>=2){const k=s.s>=3?[RC.RED,RC.REDS]:[RC.AMB,RC.AMBS];rbadge(x,s.s+" days in a row",rx-bw-10,y+62,k[0],k[1])}
+  if(hr){x.fillStyle=RC.S2;rr(x,PM+20,y+hh-58,PIW-40,42,16);x.fill();x.fillStyle=RC.INK;x.font="600 22px "+FF;x.fillText(fit(x,"Remark:  "+String(s.r).trim(),PIW-80),PM+36,y+hh-29)}}}}
+function leaveBlock(s){return{h:96,gap:12,draw(x,y){rcard(x,PM,y,PIW,96,30,"#fff",RC.LN);ravatar(x,PM+20,y+16,64,tail(s.roll),RC.AMB,RC.AMBS);x.fillStyle=RC.INK;x.font="800 28px "+FF;x.fillText(fit(x,s.name,520),PM+104,y+42);x.fillStyle=RC.MU;x.font="600 21px "+FF;x.fillText(fit(x,s.roll+"  ·  "+(s.reason||"Approved leave"),PIW-150),PM+104,y+72)}}}
+function emptyBlock(t,sub){return{h:116,gap:14,draw(x,y){rcard(x,PM,y,PIW,116,32,"#fff",RC.LN);rcard(x,PM+24,y+26,64,64,20,RC.OKS);x.strokeStyle=RC.OK;x.lineWidth=6;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(PM+41,y+59);x.lineTo(PM+52,y+70);x.lineTo(PM+71,y+47);x.stroke();
+  x.fillStyle=RC.INK;x.font="800 30px "+FF;x.fillText(t,PM+110,y+56);x.fillStyle=RC.MU;x.font="600 22px "+FF;x.fillText(sub,PM+110,y+88)}}}
+/* daily report for the incharge. Half leaves are not shown here and count as present. */
+function dayReportPages(r,d,cname,logo){const ab=r.list,lv=r.leaves,total=r.total,present=Math.max(0,total-ab.length-lv.length),called=ab.filter(s=>s.o).length;
+ const dl=new Date(d+"T12:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"});
+ const blocks=[heading("Absentees",ab.length,RC.RED,RC.REDS)].concat(ab.length?ab.map(absBlock):[emptyBlock("No absentees","Everyone on the register was accounted for.")]);
+ if(lv.length)blocks.push(heading("On leave",lv.length,RC.AMB,RC.AMBS),...lv.map(leaveBlock));
+ return buildReport({title:"Daily Absence Report",sub:cname+"  ·  "+total+" students",pill:dl,cname:cname,total:total,pct:total?Math.round(100*(total-ab.length)/total):null,
+  parts:[[present,RC.OK],[lv.length,RC.AMB],[ab.length,RC.RED]],tiles:[["Present",present,RC.OK],["Absent",ab.length,RC.RED],["On leave",lv.length,RC.AMB],["Reached",called+" / "+ab.length]],blocks:blocks},logo)}
+/* monthly summary: every student, most absences first */
+function monthReportPages(r,ym,cname,logo){const rows=r.rows.slice().sort((a,b)=>b.n-a.n||natc(a.roll,b.roll)),days=r.days,total=rows.length,sumA=rows.reduce((q,x)=>q+x.n,0);
+ const pctOf=x=>days?Math.round(100*(days-x.n)/days):null,low=days?rows.filter(x=>pctOf(x)<RC.MINP).length:0,avg=days&&total?Math.round(100*(days*total-sumA)/(days*total)):null;
+ const ml=new Date(ym+"-15T12:00:00").toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+ const head={h:44,gap:4,draw(x,y){x.fillStyle=RC.MU;x.font="800 19px "+FF;x.textAlign="left";x.fillText("STUDENT",PM+26,y+30);x.textAlign="center";x.fillText("ABSENT",PM+600,y+30);x.fillText("LEAVE",PM+720,y+30);x.textAlign="left";x.fillText("ATTENDANCE",PM+790,y+30);x.textAlign="left"}};
+ const rowB=x0=>({h:64,gap:6,draw(x,y){rcard(x,PM,y,PIW,64,24,"#fff",RC.LN);const p=pctOf(x0),col=p==null?RC.MU:p<RC.MINP?RC.RED:p<90?RC.AMB:RC.OK,bg=p==null?RC.S2:p<RC.MINP?RC.REDS:p<90?RC.AMBS:RC.OKS;
+  ravatar(x,PM+14,y+8,48,tail(x0.roll),x0.n>=3?RC.RED:RC.BR,x0.n>=3?RC.REDS:"#dff2ea");x.fillStyle=RC.INK;x.font="800 25px "+FF;x.fillText(fit(x,x0.name,440),PM+80,y+30);x.fillStyle=RC.MU;x.font="600 18px "+FF;x.fillText(x0.roll,PM+80,y+52);
+  x.textAlign="center";x.font="800 29px "+FF;x.fillStyle=x0.n>=3?RC.RED:x0.n?RC.INK:"#98a2b3";x.fillText(String(x0.n),PM+600,y+42);x.fillStyle=x0.l?RC.AMB:"#98a2b3";x.fillText(String(x0.l),PM+720,y+42);x.textAlign="left";
+  x.fillStyle=RC.S2;rr(x,PM+790,y+25,170,14,7);x.fill();if(p){x.fillStyle=col;rr(x,PM+790,y+25,Math.max(14,170*p/100),14,7);x.fill()}
+  x.fillStyle=col;x.font="800 24px "+FF;x.textAlign="right";x.fillText(p==null?"–":p+"%",PM+PIW-24,y+42);x.textAlign="left"}});
+ const blocks=[heading("Students",total,RC.BR,"#dff2ea"),head].concat(rows.map(rowB));
+ return buildReport({title:"Monthly Attendance Summary",sub:cname+"  ·  "+days+" class days recorded",pill:ml,cname:cname,total:days*total,pct:avg,
+  parts:[[days*total-sumA,RC.OK],[sumA,RC.RED]],tiles:[["Class days",days],["Students",total],["Below "+RC.MINP+"%",low,low?RC.RED:RC.INK],["Absent days",sumA,sumA?RC.RED:RC.INK]],blocks:blocks},logo)}
+/* minimal PDF writer: one JPEG page image per A4 page */
+async function pdfFromCanvases(cs){const enc=new TextEncoder(),parts=[],offs=[];let off=0;
+ const push=b=>{const u=typeof b==="string"?enc.encode(b):b;parts.push(u);off+=u.length};
+ const jpg=await Promise.all(cs.map(c=>new Promise(ok=>c.toBlob(b=>b.arrayBuffer().then(a=>ok(new Uint8Array(a))),"image/jpeg",.92)))),n=cs.length;
+ push("%PDF-1.4\n");const obj=(id,body)=>{offs[id]=off;push(id+" 0 obj\n"+body+"\nendobj\n")};
+ obj(1,"<< /Type /Catalog /Pages 2 0 R >>");obj(2,"<< /Type /Pages /Count "+n+" /Kids ["+cs.map((_,i)=>(3+3*i)+" 0 R").join(" ")+"] >>");
+ cs.forEach((c,i)=>{const p=3+3*i,ct=p+1,im=p+2,cont="q 595.28 0 0 841.89 0 0 cm /Im0 Do Q";
+  obj(p,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 "+im+" 0 R >> >> /Contents "+ct+" 0 R >>");
+  obj(ct,"<< /Length "+cont.length+" >>\nstream\n"+cont+"\nendstream");
+  offs[im]=off;push(im+" 0 obj\n<< /Type /XObject /Subtype /Image /Width "+c.width+" /Height "+c.height+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpg[i].length+" >>\nstream\n");push(jpg[i]);push("\nendstream\nendobj\n")});
+ const N=3+3*n,xr=off;let t="xref\n0 "+N+"\n0000000000 65535 f \n";for(let i=1;i<N;i++)t+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+ push(t+"trailer\n<< /Size "+N+" /Root 1 0 R >>\nstartxref\n"+xr+"\n%%EOF");
+ const out=new Uint8Array(off);let q=0;parts.forEach(u=>{out.set(u,q);q+=u.length});return out}
+function savePdf(bytes,name){deliver(new Blob([bytes],{type:"application/pdf"}),name)}
+
+const PWA=true,PRE={};
+let CFG;try{CFG=JSON.parse(localStorage.getItem("gct_cfg")||"")}catch(e){}
+if(!CFG||!Array.isArray(CFG.list))CFG={list:[],cur:0};
+const saveCfg=()=>{try{localStorage.setItem("gct_cfg",JSON.stringify(CFG))}catch(e){}};
+const active_=()=>CFG.list[CFG.cur];
+const className=()=>(active_()||{}).n||"Class";
+const ckey=()=>{const c=active_();return c?c.u.slice(-24):""};
+function addClass(n,u,k){u=(u||"").trim();k=(k||"").trim();n=(n||"").trim()||"Class";
+ if(!/^https:\/\/script\.google\.com\/\S+\/exec$/.test(u))throw new Error("The web app link must start with https://script.google.com and end with /exec");
+ if(!/^[A-Za-z0-9-]{8,64}$/.test(k))throw new Error("The teacher key looks wrong. Copy it from Settings, cell B2.");
+ const i=CFG.list.findIndex(x=>x.u===u);if(i>=0)CFG.list[i]={n:n,u:u,k:k};else CFG.list.push({n:n,u:u,k:k});CFG.cur=i>=0?i:CFG.list.length-1;saveCfg()}
+async function api(fn,args){const c=active_();if(!c)throw new Error("No class connected");let res;
+ try{res=await fetch(c.u,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({fn:fn,args:[c.k].concat(args)}),redirect:"follow"})}
+ catch(e){throw new Error("No connection. Check your internet and try again.")}
+ let j;try{j=await res.json()}catch(e){throw new Error("Server error. Check the web app link, and that the latest version is deployed for Anyone.")}
+ if(!j.ok)throw new Error(j.error);return j.data}
+function resetAll(){S.day=null;S.fu=null;S.students=[]}
+function subNode(){if(!CFG.list.length)return document.createTextNode("Not connected");
+ return h("select",{"aria-label":"Class",onchange:e=>{if(e.target.value==="add"){drawSub();go("setup");return}CFG.cur=+e.target.value;saveCfg();resetAll();go("today");drawDbar();loadDay(true)}},
+  CFG.list.map((x,i)=>h("option",{value:String(i),selected:i===CFG.cur},x.n)),h("option",{value:"add"},"+ Add class"))}
+function drawSetup(){const c=$("#v-setup"),n=h("input",{class:"in",placeholder:"e.g. Third Year C",value:PRE.c||""}),u=h("input",{class:"in",type:"url",placeholder:"https://script.google.com/…/exec",value:PRE.u||""}),k=h("input",{class:"in",placeholder:"Teacher key",value:PRE.k||""}),msg=h("div",{class:"err"});
+ c.replaceChildren(h("div",{class:"card",style:"margin-top:8px"},h("div",{style:"font-size:22px;font-weight:800;letter-spacing:-.02em"},"Connect a class"),h("div",{class:"mu sm-t",style:"margin:6px 0 16px"},"Saved only on this phone. Find them in the class Google Sheet, on the Settings tab (link in B3, key in B2)."),
+  fld("Class name",n),fld("Web app link",u),fld("Teacher key",k),msg,
+  h("button",{class:"btn blk",onclick:()=>{try{addClass(n.value,u.value,k.value)}catch(e){msg.textContent=e.message;return}resetAll();drawSub();go("today");drawDbar();loadDay(true)}},"Connect"),
+  CFG.list.length?h("button",{class:"btn ghost blk",style:"margin-top:10px",onclick:()=>go("today")},"Cancel"):null))}
+function drawClasses(){const c=$("#v-classes");
+ c.replaceChildren(CFG.list.map((x,i)=>item({av:tail(x.n).slice(0,2).toUpperCase(),title:x.n+(i===CFG.cur?" (open)":""),sub:x.u.slice(0,44)+"…",
+   right:h("button",{class:"btn sm danger",onclick:()=>{if(!confirm("Remove "+x.n+" from this phone? Your records in Google Sheets are not affected."))return;CFG.list.splice(i,1);CFG.cur=0;saveCfg();resetAll();drawSub();if(!CFG.list.length){go("setup");return}drawClasses();loadDay(true)}},"Remove")})),
+  h("button",{class:"btn blk",style:"margin-top:6px",onclick:()=>go("setup")},ic("plus"),"Add class"))}
+function BOOT(){const hs=location.hash.replace(/^#/,"");
+ if(hs){const p=new URLSearchParams(hs);if(p.get("u")&&p.get("k")){try{addClass(p.get("c")||"Class",p.get("u"),p.get("k"))}catch(e){PRE.u=p.get("u");PRE.k=p.get("k");PRE.c=p.get("c")||""}}history.replaceState(null,"",location.pathname+location.search)}
+ drawSub();if(!active_()){go("setup");return}go("today");loadDay(true);
+ if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+
 
 /* ===================== boot ===================== */
-(function(){if(PWA){const hs=location.hash.replace(/^#/,"");if(hs){const p=new URLSearchParams(hs);if(p.get("u"))PRE.u=p.get("u");if(p.get("c"))PRE.c=p.get("c");history.replaceState(null,"",location.pathname+location.search)}
- if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
- if(ready())startDay();else showConn("")})();
+drawDbar();
+BOOT();
 </script></body></html>
